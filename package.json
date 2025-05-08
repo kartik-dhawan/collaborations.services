@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "compile": "tsc",
+    "compile:build": "tsc --project tsconfig.build.json",
     "start": "npm run compile && node ./dist/index.js",
     "serve": "nodemon",
     "generate": "graphql-codegen",
