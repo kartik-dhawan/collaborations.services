@@ -1,5 +1,6 @@
-import queryDefs from "./testDefs.ts";
+import queryDefs from "./queryDefs.ts";
+import userDefs from "./users.type.ts";
 
-const typeDefs = [queryDefs];
+const typeDefs = [queryDefs, userDefs];
 
 export default typeDefs;
