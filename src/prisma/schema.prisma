@@ -18,16 +18,12 @@ datasource db {
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
-  name  String?
-  role  String? @default("USER")
-  Post  Post[]
+  name  String
+  role  Role    @default(USER)
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+
+enum Role {
+  USER
+  ADMIN
 }

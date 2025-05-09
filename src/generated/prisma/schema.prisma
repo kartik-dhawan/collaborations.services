@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  previewFeatures = ["prismaSchemaFolder"]
 }
 
 datasource db {
@@ -15,18 +16,13 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  role  String? @default("USER")
-  Post  Post[]
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+  role  Role   @default(USER)
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+enum Role {
+  USER
+  ADMIN
 }
