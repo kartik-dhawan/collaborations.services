@@ -12,6 +12,13 @@ const userDefs = gql`
     USER
     ADMIN
   }
+
+  input UpdateUserPayload {
+    id: Int!
+    email: String
+    name: String
+    role: UserRole
+  }
 `;
 
 export default userDefs;

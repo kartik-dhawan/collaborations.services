@@ -16,6 +16,16 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  updateUser: User;
+};
+
+
+export type MutationUpdateUserArgs = {
+  payload: UpdateUserPayload;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllUsers?: Maybe<Array<User>>;
@@ -25,6 +35,13 @@ export type Query = {
 
 export type QueryGetUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type UpdateUserPayload = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<UserRole>;
 };
 
 export type User = {
@@ -113,8 +130,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateUserPayload: UpdateUserPayload;
   User: ResolverTypeWrapper<User>;
   UserRole: UserRole;
 };
@@ -123,9 +142,15 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Int: Scalars['Int']['output'];
+  Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  UpdateUserPayload: UpdateUserPayload;
   User: User;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -142,6 +167,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
