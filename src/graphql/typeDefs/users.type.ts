@@ -6,6 +6,8 @@ const userDefs = gql`
     email: String!
     name: String!
     role: UserRole
+    createdAt: String!
+    updatedAt: String!
   }
 
   enum UserRole {
@@ -44,6 +46,11 @@ const userDefs = gql`
     email: String!
     name: String!
     role: UserRole
+  }
+
+  type DeleteUserResponse {
+    status: DeleteStatus!
+    message: String!
   }
 `;
 

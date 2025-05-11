@@ -5,6 +5,11 @@ const commonDefs = gql`
     ASC
     DESC
   }
+
+  enum DeleteStatus {
+    SUCCESS
+    FAILED
+  }
 `;
 
 export default commonDefs;

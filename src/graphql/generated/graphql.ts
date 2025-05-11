@@ -22,6 +22,17 @@ export type CreateUserPayload = {
   role?: InputMaybe<UserRole>;
 };
 
+export enum DeleteStatus {
+  Failed = 'FAILED',
+  Success = 'SUCCESS'
+}
+
+export type DeleteUserResponse = {
+  __typename?: 'DeleteUserResponse';
+  message: Scalars['String']['output'];
+  status: DeleteStatus;
+};
+
 export type FetchUserPayload = {
   search?: InputMaybe<Array<UserSearch>>;
   sort?: InputMaybe<UserSorting>;
@@ -30,12 +41,18 @@ export type FetchUserPayload = {
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
+  deleteAUser: DeleteUserResponse;
   updateUser: User;
 };
 
 
 export type MutationCreateUserArgs = {
   payload: CreateUserPayload;
+};
+
+
+export type MutationDeleteAUserArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -73,10 +90,12 @@ export type UpdateUserPayload = {
 
 export type User = {
   __typename?: 'User';
+  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   role?: Maybe<UserRole>;
+  updatedAt: Scalars['String']['output'];
 };
 
 export enum UserRole {
@@ -172,6 +191,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateUserPayload: CreateUserPayload;
+  DeleteStatus: DeleteStatus;
+  DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
   FetchUserPayload: FetchUserPayload;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -190,6 +211,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateUserPayload: CreateUserPayload;
+  DeleteUserResponse: DeleteUserResponse;
   FetchUserPayload: FetchUserPayload;
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -201,8 +223,15 @@ export type ResolversParentTypes = {
   UserSorting: UserSorting;
 };
 
+export type DeleteUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteUserResponse'] = ResolversParentTypes['DeleteUserResponse']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['DeleteStatus'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'payload'>>;
+  deleteAUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteAUserArgs, 'id'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };
 
@@ -212,14 +241,17 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

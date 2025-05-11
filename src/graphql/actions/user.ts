@@ -1,12 +1,17 @@
 import prisma from "../../prisma/index.ts";
 import {
   CreateUserPayload,
+  DeleteStatus,
+  DeleteUserResponse,
   FetchUserPayload,
   UpdateUserPayload,
   User,
   UserRole,
 } from "../generated/graphql.ts";
-import { graphQLToPrismaSortingLabels } from "../utils/index.ts";
+import {
+  graphQLToPrismaSortingLabels,
+  responseMessages,
+} from "../utils/index.ts";
 
 export const fetchAllUsers = async (payload?: FetchUserPayload) => {
   // fetch all users from DB - user
@@ -40,6 +45,8 @@ export const fetchAllUsers = async (payload?: FetchUserPayload) => {
   const finalRes: User[] = users.map((it) => ({
     ...it,
     role: it.role as UserRole,
+    createdAt: it.createdAt.toISOString(),
+    updatedAt: it.updatedAt.toISOString(),
   }));
 
   return finalRes;
@@ -57,6 +64,8 @@ export const fetchUserById = async (userId: number) => {
   const finalRes: User = {
     ...user,
     role: user?.role as UserRole,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
   };
 
   return finalRes;
@@ -81,6 +90,8 @@ export const updateUserDetails = async (payload: UpdateUserPayload) => {
   const finalRes: User = {
     ...updatedUser,
     role: updatedUser.role as UserRole,
+    createdAt: updatedUser.createdAt.toISOString(),
+    updatedAt: updatedUser.updatedAt.toISOString(),
   };
 
   return finalRes;
@@ -101,7 +112,32 @@ export const createNewUser = async (payload: CreateUserPayload) => {
     id: createdUser.id,
     name: createdUser.name,
     role: createdUser.role as UserRole,
+    createdAt: createdUser.createdAt.toISOString(),
+    updatedAt: createdUser.updatedAt.toISOString(),
   };
 
   return finalRes;
+};
+
+export const deleteUser = async (
+  userId: number
+): Promise<DeleteUserResponse> => {
+  // delete user from DB
+  const deletedUser = await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (deletedUser) {
+    return {
+      message: responseMessages.USER.CREATION_SUCCESS,
+      status: DeleteStatus.Success,
+    };
+  } else {
+    return {
+      message: responseMessages.USER.NOT_FOUND,
+      status: DeleteStatus.Failed,
+    };
+  }
 };
