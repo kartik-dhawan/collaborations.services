@@ -13,6 +13,26 @@ const userDefs = gql`
     ADMIN
   }
 
+  enum UserSearchFields {
+    email
+    name
+  }
+
+  input UserSearch {
+    key: UserSearchFields!
+    value: String!
+  }
+
+  input UserSorting {
+    key: UserSearchFields!
+    value: OrderBy!
+  }
+
+  input FetchUserPayload {
+    search: [UserSearch!]
+    sort: UserSorting
+  }
+
   input UpdateUserPayload {
     id: Int!
     email: String

@@ -7,10 +7,11 @@ import {
   updateUserDetails,
 } from "../actions/index.ts";
 
+/** QUERIES */
 export const userQueries: Resolvers["Query"] = {
-  getAllUsers: async () => {
+  getAllUsers: async (_, { payload }) => {
     try {
-      const users: User[] = await fetchAllUsers();
+      const users: User[] = await fetchAllUsers(payload);
       return users;
     } catch (error) {
       throw new GraphQLError(
@@ -31,6 +32,7 @@ export const userQueries: Resolvers["Query"] = {
   },
 };
 
+/** MUTATIONS */
 export const userMutations: Resolvers["Mutation"] = {
   updateUser: async (_, { payload }) => {
     try {

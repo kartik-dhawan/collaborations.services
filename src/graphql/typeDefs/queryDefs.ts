@@ -2,7 +2,7 @@ import { gql } from "graphql-tag";
 
 const queryDefs = gql`
   type Query {
-    getAllUsers: [User!]
+    getAllUsers(payload: FetchUserPayload): [User!]
     getUserById(id: Int!): User!
   }
 `;

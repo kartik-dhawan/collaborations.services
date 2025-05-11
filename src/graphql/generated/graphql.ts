@@ -22,6 +22,11 @@ export type CreateUserPayload = {
   role?: InputMaybe<UserRole>;
 };
 
+export type FetchUserPayload = {
+  search?: InputMaybe<Array<UserSearch>>;
+  sort?: InputMaybe<UserSorting>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
@@ -38,10 +43,20 @@ export type MutationUpdateUserArgs = {
   payload: UpdateUserPayload;
 };
 
+export enum OrderBy {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
 export type Query = {
   __typename?: 'Query';
   getAllUsers?: Maybe<Array<User>>;
   getUserById: User;
+};
+
+
+export type QueryGetAllUsersArgs = {
+  payload?: InputMaybe<FetchUserPayload>;
 };
 
 
@@ -68,6 +83,21 @@ export enum UserRole {
   Admin = 'ADMIN',
   User = 'USER'
 }
+
+export type UserSearch = {
+  key: UserSearchFields;
+  value: Scalars['String']['input'];
+};
+
+export enum UserSearchFields {
+  Email = 'email',
+  Name = 'name'
+}
+
+export type UserSorting = {
+  key: UserSearchFields;
+  value: OrderBy;
+};
 
 
 
@@ -142,25 +172,33 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateUserPayload: CreateUserPayload;
+  FetchUserPayload: FetchUserPayload;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
+  OrderBy: OrderBy;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   UpdateUserPayload: UpdateUserPayload;
   User: ResolverTypeWrapper<User>;
   UserRole: UserRole;
+  UserSearch: UserSearch;
+  UserSearchFields: UserSearchFields;
+  UserSorting: UserSorting;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateUserPayload: CreateUserPayload;
+  FetchUserPayload: FetchUserPayload;
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
   UpdateUserPayload: UpdateUserPayload;
   User: User;
+  UserSearch: UserSearch;
+  UserSorting: UserSorting;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -169,7 +207,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
+  getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
   getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
 };
 

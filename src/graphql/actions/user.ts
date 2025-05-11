@@ -1,14 +1,40 @@
 import prisma from "../../prisma/index.ts";
 import {
   CreateUserPayload,
+  FetchUserPayload,
   UpdateUserPayload,
   User,
   UserRole,
 } from "../generated/graphql.ts";
+import { graphQLToPrismaSortingLabels } from "../utils/index.ts";
 
-export const fetchAllUsers = async () => {
+export const fetchAllUsers = async (payload?: FetchUserPayload) => {
   // fetch all users from DB - user
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany(
+    payload
+      ? {
+          // also add searching filter to it
+          where: {
+            AND:
+              payload.search?.map((it) => {
+                return {
+                  [it.key]: {
+                    contains: it?.value,
+                    mode: "insensitive",
+                  },
+                };
+              }) ?? [],
+          },
+          // add sorting technique for user table
+          orderBy: payload.sort
+            ? {
+                [payload.sort.key]:
+                  graphQLToPrismaSortingLabels[payload.sort.value],
+              }
+            : {},
+        }
+      : {}
+  );
 
   // map data from Prisma schema to graphql Schema
   const finalRes: User[] = users.map((it) => ({
