@@ -53,7 +53,6 @@ export const createNewCollaboration = async (
   });
 
   const finalRes: Collaboration = {
-    clientId: createdCollab.clientId,
     collabNotes: createdCollab.collabNotes,
     collabStatus: createdCollab.collabStatus as CsCollabStatus,
     createdAt: createdCollab.createdAt.toISOString(),
@@ -89,4 +88,50 @@ export const createNewCollaboration = async (
   };
 
   return finalRes;
+};
+
+export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
+  const collabs = prisma.collaborations.findMany({
+    include: {
+      client: {
+        include: {
+          contactPeople: true,
+        },
+      },
+    },
+  });
+
+  return (await collabs).map((item) => ({
+    collabStatus: item.collabStatus as CsCollabStatus,
+    createdAt: item.createdAt.toISOString(),
+    dealDate: item.dealDate?.toISOString(),
+    deliverableDate: item.deliverableDate?.toISOString(),
+    deliverableLink: item.deliverableLink,
+    deliverableNotes: item.deliverableNotes,
+    deliverableStatus: item.deliverableStatus as CsDeliverableStatus,
+    id: item.id,
+    name: item.name,
+    paymentAmount: item.paymentAmount,
+    paymentDate: item.paymentDate?.toISOString(),
+    paymentStatus: item.paymentStatus as CsPaymentStatus,
+    type: item.type as CsCollabType,
+    updatedAt: item.updatedAt?.toISOString(),
+    deliverables: item.deliverables as CsCollabDeliverables[],
+    client: {
+      id: item.client.id,
+      name: item.client.name,
+      instagram: item.client.instagram,
+      clientNotes: item.client.clientNotes,
+      createdAt: item.client.createdAt.toISOString(),
+      clientContacts:
+        item.client.contactPeople.map((contact) => ({
+          id: contact.id,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          createdAt: contact.createdAt.toISOString(),
+          clientNotes: contact.contactNotes,
+        })) ?? [],
+    },
+  }));
 };
