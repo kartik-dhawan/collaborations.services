@@ -1,23 +1,21 @@
 import { gql } from "graphql-tag";
 
 const clientDefs = gql`
-  type ClientDetails {
+  type CsClientSummary {
     id: ID!
     name: String!
     instagram: String
     createdAt: String!
-    clientContacts: [ClientContactDetails!]!
-    collaborations: [Collaboration!]!
+    clientContacts: [CsClientContactDetails!]!
     clientNotes: String
   }
 
-  type ClientContactDetails {
+  type CsClientContactDetails {
     id: ID!
     name: String!
     email: String
     phone: String
     createdAt: String!
-    client: ClientDetails!
     clientNotes: String
   }
 
@@ -25,16 +23,22 @@ const clientDefs = gql`
     name: String!
     email: String
     phone: String
-    createdAt: String!
     clientNotes: String
+    gender: CsGender
   }
 
   input CreateClientPayload {
     name: String!
     instagram: String
-    createdAt: String!
     clientContacts: [CreateClientContactPayload!]!
     clientNotes: String
+  }
+
+  enum CsGender {
+    MALE
+    FEMALE
+    OTHER
+    PREFER_NOT_TO_SAY
   }
 `;
 

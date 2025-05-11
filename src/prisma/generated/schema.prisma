@@ -24,14 +24,13 @@ model User {
 }
 
 model ClientData {
-  id              String           @id @default(uuid())
-  name            String
-  instagram       String?
-  createdAt       DateTime         @default(now())
-  clientContactId String
-  contactPeople   ClientContact[]  @relation("clientToContact")
-  collaborations  Collaborations[] @relation("clientToCollab")
-  clientNotes     String?
+  id             String           @id @default(uuid())
+  name           String
+  instagram      String?
+  createdAt      DateTime         @default(now())
+  contactPeople  ClientContact[]  @relation("clientToContact")
+  collaborations Collaborations[] @relation("clientToCollab")
+  clientNotes    String?
 }
 
 model ClientContact {

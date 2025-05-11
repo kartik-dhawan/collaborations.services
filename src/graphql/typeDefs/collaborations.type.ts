@@ -12,8 +12,7 @@ const collaborationsDef = gql`
     paymentStatus: CsPaymentStatus!
     paymentAmount: Int
     paymentDate: String
-    clientId: String!
-    client: ClientDetails!
+    client: CsClientSummary!
     deliverables: [CsCollabDeliverables!]!
     deliverableDate: String
     deliverableLink: String
@@ -26,8 +25,6 @@ const collaborationsDef = gql`
     name: String
     type: CsCollabType!
     collabStatus: CsCollabStatus!
-    createdAt: String!
-    updatedAt: String
     dealDate: String
     paymentStatus: CsPaymentStatus!
     paymentAmount: Int

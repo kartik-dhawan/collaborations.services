@@ -134,7 +134,6 @@ exports.Prisma.ClientDataScalarFieldEnum = {
   name: 'name',
   instagram: 'instagram',
   createdAt: 'createdAt',
-  clientContactId: 'clientContactId',
   clientNotes: 'clientNotes'
 };
 

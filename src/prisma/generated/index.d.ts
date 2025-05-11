@@ -2344,7 +2344,6 @@ export namespace Prisma {
     name: string | null
     instagram: string | null
     createdAt: Date | null
-    clientContactId: string | null
     clientNotes: string | null
   }
 
@@ -2353,7 +2352,6 @@ export namespace Prisma {
     name: string | null
     instagram: string | null
     createdAt: Date | null
-    clientContactId: string | null
     clientNotes: string | null
   }
 
@@ -2362,7 +2360,6 @@ export namespace Prisma {
     name: number
     instagram: number
     createdAt: number
-    clientContactId: number
     clientNotes: number
     _all: number
   }
@@ -2373,7 +2370,6 @@ export namespace Prisma {
     name?: true
     instagram?: true
     createdAt?: true
-    clientContactId?: true
     clientNotes?: true
   }
 
@@ -2382,7 +2378,6 @@ export namespace Prisma {
     name?: true
     instagram?: true
     createdAt?: true
-    clientContactId?: true
     clientNotes?: true
   }
 
@@ -2391,7 +2386,6 @@ export namespace Prisma {
     name?: true
     instagram?: true
     createdAt?: true
-    clientContactId?: true
     clientNotes?: true
     _all?: true
   }
@@ -2473,7 +2467,6 @@ export namespace Prisma {
     name: string
     instagram: string | null
     createdAt: Date
-    clientContactId: string
     clientNotes: string | null
     _count: ClientDataCountAggregateOutputType | null
     _min: ClientDataMinAggregateOutputType | null
@@ -2499,7 +2492,6 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    clientContactId?: boolean
     clientNotes?: boolean
     contactPeople?: boolean | ClientData$contactPeopleArgs<ExtArgs>
     collaborations?: boolean | ClientData$collaborationsArgs<ExtArgs>
@@ -2511,7 +2503,6 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    clientContactId?: boolean
     clientNotes?: boolean
   }, ExtArgs["result"]["clientData"]>
 
@@ -2520,7 +2511,6 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    clientContactId?: boolean
     clientNotes?: boolean
   }, ExtArgs["result"]["clientData"]>
 
@@ -2529,11 +2519,10 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    clientContactId?: boolean
     clientNotes?: boolean
   }
 
-  export type ClientDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "instagram" | "createdAt" | "clientContactId" | "clientNotes", ExtArgs["result"]["clientData"]>
+  export type ClientDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "instagram" | "createdAt" | "clientNotes", ExtArgs["result"]["clientData"]>
   export type ClientDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contactPeople?: boolean | ClientData$contactPeopleArgs<ExtArgs>
     collaborations?: boolean | ClientData$collaborationsArgs<ExtArgs>
@@ -2553,7 +2542,6 @@ export namespace Prisma {
       name: string
       instagram: string | null
       createdAt: Date
-      clientContactId: string
       clientNotes: string | null
     }, ExtArgs["result"]["clientData"]>
     composites: {}
@@ -2984,7 +2972,6 @@ export namespace Prisma {
     readonly name: FieldRef<"ClientData", 'String'>
     readonly instagram: FieldRef<"ClientData", 'String'>
     readonly createdAt: FieldRef<"ClientData", 'DateTime'>
-    readonly clientContactId: FieldRef<"ClientData", 'String'>
     readonly clientNotes: FieldRef<"ClientData", 'String'>
   }
     
@@ -5812,7 +5799,6 @@ export namespace Prisma {
     name: 'name',
     instagram: 'instagram',
     createdAt: 'createdAt',
-    clientContactId: 'clientContactId',
     clientNotes: 'clientNotes'
   };
 
@@ -6109,7 +6095,6 @@ export namespace Prisma {
     name?: StringFilter<"ClientData"> | string
     instagram?: StringNullableFilter<"ClientData"> | string | null
     createdAt?: DateTimeFilter<"ClientData"> | Date | string
-    clientContactId?: StringFilter<"ClientData"> | string
     clientNotes?: StringNullableFilter<"ClientData"> | string | null
     contactPeople?: ClientContactListRelationFilter
     collaborations?: CollaborationsListRelationFilter
@@ -6120,7 +6105,6 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    clientContactId?: SortOrder
     clientNotes?: SortOrderInput | SortOrder
     contactPeople?: ClientContactOrderByRelationAggregateInput
     collaborations?: CollaborationsOrderByRelationAggregateInput
@@ -6134,7 +6118,6 @@ export namespace Prisma {
     name?: StringFilter<"ClientData"> | string
     instagram?: StringNullableFilter<"ClientData"> | string | null
     createdAt?: DateTimeFilter<"ClientData"> | Date | string
-    clientContactId?: StringFilter<"ClientData"> | string
     clientNotes?: StringNullableFilter<"ClientData"> | string | null
     contactPeople?: ClientContactListRelationFilter
     collaborations?: CollaborationsListRelationFilter
@@ -6145,7 +6128,6 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    clientContactId?: SortOrder
     clientNotes?: SortOrderInput | SortOrder
     _count?: ClientDataCountOrderByAggregateInput
     _max?: ClientDataMaxOrderByAggregateInput
@@ -6160,7 +6142,6 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ClientData"> | string
     instagram?: StringNullableWithAggregatesFilter<"ClientData"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ClientData"> | Date | string
-    clientContactId?: StringWithAggregatesFilter<"ClientData"> | string
     clientNotes?: StringNullableWithAggregatesFilter<"ClientData"> | string | null
   }
 
@@ -6416,7 +6397,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
     contactPeople?: ClientContactCreateNestedManyWithoutClientInput
     collaborations?: CollaborationsCreateNestedManyWithoutClientInput
@@ -6427,7 +6407,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
     contactPeople?: ClientContactUncheckedCreateNestedManyWithoutClientInput
     collaborations?: CollaborationsUncheckedCreateNestedManyWithoutClientInput
@@ -6438,7 +6417,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUpdateManyWithoutClientNestedInput
     collaborations?: CollaborationsUpdateManyWithoutClientNestedInput
@@ -6449,7 +6427,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUncheckedUpdateManyWithoutClientNestedInput
     collaborations?: CollaborationsUncheckedUpdateManyWithoutClientNestedInput
@@ -6460,7 +6437,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
   }
 
@@ -6469,7 +6445,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -6478,7 +6453,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -6890,7 +6864,6 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrder
     createdAt?: SortOrder
-    clientContactId?: SortOrder
     clientNotes?: SortOrder
   }
 
@@ -6899,7 +6872,6 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrder
     createdAt?: SortOrder
-    clientContactId?: SortOrder
     clientNotes?: SortOrder
   }
 
@@ -6908,7 +6880,6 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrder
     createdAt?: SortOrder
-    clientContactId?: SortOrder
     clientNotes?: SortOrder
   }
 
@@ -7787,7 +7758,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
     collaborations?: CollaborationsCreateNestedManyWithoutClientInput
   }
@@ -7797,7 +7767,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
     collaborations?: CollaborationsUncheckedCreateNestedManyWithoutClientInput
   }
@@ -7823,7 +7792,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     collaborations?: CollaborationsUpdateManyWithoutClientNestedInput
   }
@@ -7833,7 +7801,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     collaborations?: CollaborationsUncheckedUpdateManyWithoutClientNestedInput
   }
@@ -7843,7 +7810,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
     contactPeople?: ClientContactCreateNestedManyWithoutClientInput
   }
@@ -7853,7 +7819,6 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    clientContactId: string
     clientNotes?: string | null
     contactPeople?: ClientContactUncheckedCreateNestedManyWithoutClientInput
   }
@@ -7879,7 +7844,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUpdateManyWithoutClientNestedInput
   }
@@ -7889,7 +7853,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    clientContactId?: StringFieldUpdateOperationsInput | string
     clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUncheckedUpdateManyWithoutClientNestedInput
   }

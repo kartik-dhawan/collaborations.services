@@ -28,7 +28,6 @@ model ClientData {
   name              String
   instagram         String?
   createdAt         DateTime            @default(now())
-  clientContactId   String
   contactPeople     ClientContact[]     @relation("clientToContact")
   collaborations    Collaborations[]    @relation("clientToCollab")
   clientNotes       String?

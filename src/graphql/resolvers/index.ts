@@ -1,4 +1,5 @@
 import { Resolvers } from "../generated/graphql.ts";
+import { collabMutations } from "./collaboration.resolver.ts";
 import { userMutations, userQueries } from "./users.resolver.ts";
 
 export const resolvers: Resolvers = {
@@ -7,6 +8,7 @@ export const resolvers: Resolvers = {
   },
   Mutation: {
     ...userMutations,
+    ...collabMutations,
   },
 };
 

@@ -18,7 +18,7 @@ export type Scalars = {
 
 export type ClientContactDetails = {
   __typename?: 'ClientContactDetails';
-  client: ClientDetails;
+  client?: Maybe<ClientDetails>;
   clientNotes?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   email?: Maybe<Scalars['String']['output']>;
@@ -31,7 +31,7 @@ export type ClientDetails = {
   __typename?: 'ClientDetails';
   clientContacts: Array<ClientContactDetails>;
   clientNotes?: Maybe<Scalars['String']['output']>;
-  collaborations: Array<Collaboration>;
+  collaborations?: Maybe<Array<Collaboration>>;
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   instagram?: Maybe<Scalars['String']['output']>;
@@ -62,8 +62,8 @@ export type Collaboration = {
 
 export type CreateClientContactPayload = {
   clientNotes?: InputMaybe<Scalars['String']['input']>;
-  createdAt: Scalars['String']['input'];
   email?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<CsGender>;
   name: Scalars['String']['input'];
   phone?: InputMaybe<Scalars['String']['input']>;
 };
@@ -71,7 +71,6 @@ export type CreateClientContactPayload = {
 export type CreateClientPayload = {
   clientContacts: Array<CreateClientContactPayload>;
   clientNotes?: InputMaybe<Scalars['String']['input']>;
-  createdAt: Scalars['String']['input'];
   instagram?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
 };
@@ -80,7 +79,6 @@ export type CreateCollaborationPayload = {
   clientPayload: CreateClientPayload;
   collabNotes?: InputMaybe<Scalars['String']['input']>;
   collabStatus: CsCollabStatus;
-  createdAt: Scalars['String']['input'];
   dealDate?: InputMaybe<Scalars['String']['input']>;
   deliverableDate: Scalars['String']['input'];
   deliverableLink?: InputMaybe<Scalars['String']['input']>;
@@ -92,7 +90,6 @@ export type CreateCollaborationPayload = {
   paymentDate?: InputMaybe<Scalars['String']['input']>;
   paymentStatus: CsPaymentStatus;
   type: CsCollabType;
-  updatedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateUserPayload = {
@@ -133,6 +130,13 @@ export enum CsDeliverableStatus {
   InProgress = 'IN_PROGRESS',
   InReview = 'IN_REVIEW',
   Rejected = 'REJECTED'
+}
+
+export enum CsGender {
+  Female = 'FEMALE',
+  Male = 'MALE',
+  Other = 'OTHER',
+  PreferNotToSay = 'PREFER_NOT_TO_SAY'
 }
 
 export enum CsPaymentStatus {
@@ -327,6 +331,7 @@ export type ResolversTypes = {
   CsCollabStatus: CsCollabStatus;
   CsCollabType: CsCollabType;
   CsDeliverableStatus: CsDeliverableStatus;
+  CsGender: CsGender;
   CsPaymentStatus: CsPaymentStatus;
   DeleteStatus: DeleteStatus;
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
@@ -369,7 +374,7 @@ export type ResolversParentTypes = {
 };
 
 export type ClientContactDetailsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ClientContactDetails'] = ResolversParentTypes['ClientContactDetails']> = {
-  client?: Resolver<ResolversTypes['ClientDetails'], ParentType, ContextType>;
+  client?: Resolver<Maybe<ResolversTypes['ClientDetails']>, ParentType, ContextType>;
   clientNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -382,7 +387,7 @@ export type ClientContactDetailsResolvers<ContextType = any, ParentType extends 
 export type ClientDetailsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ClientDetails'] = ResolversParentTypes['ClientDetails']> = {
   clientContacts?: Resolver<Array<ResolversTypes['ClientContactDetails']>, ParentType, ContextType>;
   clientNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  collaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
+  collaborations?: Resolver<Maybe<Array<ResolversTypes['Collaboration']>>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   instagram?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
