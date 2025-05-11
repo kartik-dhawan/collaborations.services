@@ -15,3 +15,22 @@ export const fetchAllUsers = async () => {
 
   return finalRes;
 };
+
+export const fetchUserById = async (userId: number) => {
+  // fetch a single user from DB by id
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  // map data from Prisma schema to graphql Schema
+  const finalRes: User = {
+    id: user?.id,
+    email: user?.email,
+    name: user?.name,
+    role: user?.role as UserRole,
+  };
+
+  return finalRes;
+};

@@ -9,7 +9,7 @@
     "compile:build": "tsc --project tsconfig.build.json",
     "start": "npm run compile && node ./dist/index.js",
     "serve": "nodemon",
-    "generate": "graphql-codegen",
+    "generate:codegen": "graphql-codegen",
     "prisma:generate": "prisma generate --no-engine",
     "prisma:migrate:dev": "prisma migrate dev"
   },
