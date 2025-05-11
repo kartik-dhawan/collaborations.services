@@ -6,6 +6,9 @@ const mutationDefs = gql`
     createUser(payload: CreateUserPayload!): User!
     updateUser(payload: UpdateUserPayload!): User!
     deleteAUser(id: Int!): DeleteUserResponse!
+
+    # COLLABORATION mutations
+    csCreateCollaboration(payload: CreateCollaborationPayload!): Collaboration!
   }
 `;
 

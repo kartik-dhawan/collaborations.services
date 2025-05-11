@@ -134,7 +134,8 @@ exports.Prisma.ClientDataScalarFieldEnum = {
   name: 'name',
   instagram: 'instagram',
   createdAt: 'createdAt',
-  contactPerson: 'contactPerson'
+  clientContactId: 'clientContactId',
+  clientNotes: 'clientNotes'
 };
 
 exports.Prisma.ClientContactScalarFieldEnum = {
@@ -143,7 +144,9 @@ exports.Prisma.ClientContactScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   createdAt: 'createdAt',
-  clientId: 'clientId'
+  clientId: 'clientId',
+  contactNotes: 'contactNotes',
+  gender: 'gender'
 };
 
 exports.Prisma.CollaborationsScalarFieldEnum = {
@@ -183,6 +186,13 @@ exports.Prisma.NullsOrder = {
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   ADMIN: 'ADMIN'
+};
+
+exports.CsGender = exports.$Enums.CsGender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER',
+  PREFER_NOT_TO_SAY: 'PREFER_NOT_TO_SAY'
 };
 
 exports.CollabType = exports.$Enums.CollabType = {

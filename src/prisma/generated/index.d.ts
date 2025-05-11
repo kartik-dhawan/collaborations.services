@@ -46,6 +46,16 @@ export namespace $Enums {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const CsGender: {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER',
+  PREFER_NOT_TO_SAY: 'PREFER_NOT_TO_SAY'
+};
+
+export type CsGender = (typeof CsGender)[keyof typeof CsGender]
+
+
 export const CollabType: {
   UNPAID_COLLABORATION: 'UNPAID_COLLABORATION',
   PAID_COLLABORATION: 'PAID_COLLABORATION',
@@ -105,6 +115,10 @@ export type DeliverableStatus = (typeof DeliverableStatus)[keyof typeof Delivera
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type CsGender = $Enums.CsGender
+
+export const CsGender: typeof $Enums.CsGender
 
 export type CollabType = $Enums.CollabType
 
@@ -2330,7 +2344,8 @@ export namespace Prisma {
     name: string | null
     instagram: string | null
     createdAt: Date | null
-    contactPerson: string | null
+    clientContactId: string | null
+    clientNotes: string | null
   }
 
   export type ClientDataMaxAggregateOutputType = {
@@ -2338,7 +2353,8 @@ export namespace Prisma {
     name: string | null
     instagram: string | null
     createdAt: Date | null
-    contactPerson: string | null
+    clientContactId: string | null
+    clientNotes: string | null
   }
 
   export type ClientDataCountAggregateOutputType = {
@@ -2346,7 +2362,8 @@ export namespace Prisma {
     name: number
     instagram: number
     createdAt: number
-    contactPerson: number
+    clientContactId: number
+    clientNotes: number
     _all: number
   }
 
@@ -2356,7 +2373,8 @@ export namespace Prisma {
     name?: true
     instagram?: true
     createdAt?: true
-    contactPerson?: true
+    clientContactId?: true
+    clientNotes?: true
   }
 
   export type ClientDataMaxAggregateInputType = {
@@ -2364,7 +2382,8 @@ export namespace Prisma {
     name?: true
     instagram?: true
     createdAt?: true
-    contactPerson?: true
+    clientContactId?: true
+    clientNotes?: true
   }
 
   export type ClientDataCountAggregateInputType = {
@@ -2372,7 +2391,8 @@ export namespace Prisma {
     name?: true
     instagram?: true
     createdAt?: true
-    contactPerson?: true
+    clientContactId?: true
+    clientNotes?: true
     _all?: true
   }
 
@@ -2453,7 +2473,8 @@ export namespace Prisma {
     name: string
     instagram: string | null
     createdAt: Date
-    contactPerson: string
+    clientContactId: string
+    clientNotes: string | null
     _count: ClientDataCountAggregateOutputType | null
     _min: ClientDataMinAggregateOutputType | null
     _max: ClientDataMaxAggregateOutputType | null
@@ -2478,7 +2499,8 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    contactPerson?: boolean
+    clientContactId?: boolean
+    clientNotes?: boolean
     contactPeople?: boolean | ClientData$contactPeopleArgs<ExtArgs>
     collaborations?: boolean | ClientData$collaborationsArgs<ExtArgs>
     _count?: boolean | ClientDataCountOutputTypeDefaultArgs<ExtArgs>
@@ -2489,7 +2511,8 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    contactPerson?: boolean
+    clientContactId?: boolean
+    clientNotes?: boolean
   }, ExtArgs["result"]["clientData"]>
 
   export type ClientDataSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2497,7 +2520,8 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    contactPerson?: boolean
+    clientContactId?: boolean
+    clientNotes?: boolean
   }, ExtArgs["result"]["clientData"]>
 
   export type ClientDataSelectScalar = {
@@ -2505,10 +2529,11 @@ export namespace Prisma {
     name?: boolean
     instagram?: boolean
     createdAt?: boolean
-    contactPerson?: boolean
+    clientContactId?: boolean
+    clientNotes?: boolean
   }
 
-  export type ClientDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "instagram" | "createdAt" | "contactPerson", ExtArgs["result"]["clientData"]>
+  export type ClientDataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "instagram" | "createdAt" | "clientContactId" | "clientNotes", ExtArgs["result"]["clientData"]>
   export type ClientDataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     contactPeople?: boolean | ClientData$contactPeopleArgs<ExtArgs>
     collaborations?: boolean | ClientData$collaborationsArgs<ExtArgs>
@@ -2528,7 +2553,8 @@ export namespace Prisma {
       name: string
       instagram: string | null
       createdAt: Date
-      contactPerson: string
+      clientContactId: string
+      clientNotes: string | null
     }, ExtArgs["result"]["clientData"]>
     composites: {}
   }
@@ -2958,7 +2984,8 @@ export namespace Prisma {
     readonly name: FieldRef<"ClientData", 'String'>
     readonly instagram: FieldRef<"ClientData", 'String'>
     readonly createdAt: FieldRef<"ClientData", 'DateTime'>
-    readonly contactPerson: FieldRef<"ClientData", 'String'>
+    readonly clientContactId: FieldRef<"ClientData", 'String'>
+    readonly clientNotes: FieldRef<"ClientData", 'String'>
   }
     
 
@@ -3430,6 +3457,8 @@ export namespace Prisma {
     phone: string | null
     createdAt: Date | null
     clientId: string | null
+    contactNotes: string | null
+    gender: $Enums.CsGender | null
   }
 
   export type ClientContactMaxAggregateOutputType = {
@@ -3439,6 +3468,8 @@ export namespace Prisma {
     phone: string | null
     createdAt: Date | null
     clientId: string | null
+    contactNotes: string | null
+    gender: $Enums.CsGender | null
   }
 
   export type ClientContactCountAggregateOutputType = {
@@ -3448,6 +3479,8 @@ export namespace Prisma {
     phone: number
     createdAt: number
     clientId: number
+    contactNotes: number
+    gender: number
     _all: number
   }
 
@@ -3459,6 +3492,8 @@ export namespace Prisma {
     phone?: true
     createdAt?: true
     clientId?: true
+    contactNotes?: true
+    gender?: true
   }
 
   export type ClientContactMaxAggregateInputType = {
@@ -3468,6 +3503,8 @@ export namespace Prisma {
     phone?: true
     createdAt?: true
     clientId?: true
+    contactNotes?: true
+    gender?: true
   }
 
   export type ClientContactCountAggregateInputType = {
@@ -3477,6 +3514,8 @@ export namespace Prisma {
     phone?: true
     createdAt?: true
     clientId?: true
+    contactNotes?: true
+    gender?: true
     _all?: true
   }
 
@@ -3559,6 +3598,8 @@ export namespace Prisma {
     phone: string | null
     createdAt: Date
     clientId: string
+    contactNotes: string | null
+    gender: $Enums.CsGender
     _count: ClientContactCountAggregateOutputType | null
     _min: ClientContactMinAggregateOutputType | null
     _max: ClientContactMaxAggregateOutputType | null
@@ -3585,6 +3626,8 @@ export namespace Prisma {
     phone?: boolean
     createdAt?: boolean
     clientId?: boolean
+    contactNotes?: boolean
+    gender?: boolean
     client?: boolean | ClientDataDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["clientContact"]>
 
@@ -3595,6 +3638,8 @@ export namespace Prisma {
     phone?: boolean
     createdAt?: boolean
     clientId?: boolean
+    contactNotes?: boolean
+    gender?: boolean
     client?: boolean | ClientDataDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["clientContact"]>
 
@@ -3605,6 +3650,8 @@ export namespace Prisma {
     phone?: boolean
     createdAt?: boolean
     clientId?: boolean
+    contactNotes?: boolean
+    gender?: boolean
     client?: boolean | ClientDataDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["clientContact"]>
 
@@ -3615,9 +3662,11 @@ export namespace Prisma {
     phone?: boolean
     createdAt?: boolean
     clientId?: boolean
+    contactNotes?: boolean
+    gender?: boolean
   }
 
-  export type ClientContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "createdAt" | "clientId", ExtArgs["result"]["clientContact"]>
+  export type ClientContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "createdAt" | "clientId" | "contactNotes" | "gender", ExtArgs["result"]["clientContact"]>
   export type ClientContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     client?: boolean | ClientDataDefaultArgs<ExtArgs>
   }
@@ -3640,6 +3689,8 @@ export namespace Prisma {
       phone: string | null
       createdAt: Date
       clientId: string
+      contactNotes: string | null
+      gender: $Enums.CsGender
     }, ExtArgs["result"]["clientContact"]>
     composites: {}
   }
@@ -4070,6 +4121,8 @@ export namespace Prisma {
     readonly phone: FieldRef<"ClientContact", 'String'>
     readonly createdAt: FieldRef<"ClientContact", 'DateTime'>
     readonly clientId: FieldRef<"ClientContact", 'String'>
+    readonly contactNotes: FieldRef<"ClientContact", 'String'>
+    readonly gender: FieldRef<"ClientContact", 'CsGender'>
   }
     
 
@@ -5759,7 +5812,8 @@ export namespace Prisma {
     name: 'name',
     instagram: 'instagram',
     createdAt: 'createdAt',
-    contactPerson: 'contactPerson'
+    clientContactId: 'clientContactId',
+    clientNotes: 'clientNotes'
   };
 
   export type ClientDataScalarFieldEnum = (typeof ClientDataScalarFieldEnum)[keyof typeof ClientDataScalarFieldEnum]
@@ -5771,7 +5825,9 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     createdAt: 'createdAt',
-    clientId: 'clientId'
+    clientId: 'clientId',
+    contactNotes: 'contactNotes',
+    gender: 'gender'
   };
 
   export type ClientContactScalarFieldEnum = (typeof ClientContactScalarFieldEnum)[keyof typeof ClientContactScalarFieldEnum]
@@ -5882,6 +5938,20 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CsGender'
+   */
+  export type EnumCsGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CsGender'>
+    
+
+
+  /**
+   * Reference to a field of type 'CsGender[]'
+   */
+  export type ListEnumCsGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CsGender[]'>
     
 
 
@@ -6039,7 +6109,8 @@ export namespace Prisma {
     name?: StringFilter<"ClientData"> | string
     instagram?: StringNullableFilter<"ClientData"> | string | null
     createdAt?: DateTimeFilter<"ClientData"> | Date | string
-    contactPerson?: StringFilter<"ClientData"> | string
+    clientContactId?: StringFilter<"ClientData"> | string
+    clientNotes?: StringNullableFilter<"ClientData"> | string | null
     contactPeople?: ClientContactListRelationFilter
     collaborations?: CollaborationsListRelationFilter
   }
@@ -6049,7 +6120,8 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    contactPerson?: SortOrder
+    clientContactId?: SortOrder
+    clientNotes?: SortOrderInput | SortOrder
     contactPeople?: ClientContactOrderByRelationAggregateInput
     collaborations?: CollaborationsOrderByRelationAggregateInput
   }
@@ -6062,7 +6134,8 @@ export namespace Prisma {
     name?: StringFilter<"ClientData"> | string
     instagram?: StringNullableFilter<"ClientData"> | string | null
     createdAt?: DateTimeFilter<"ClientData"> | Date | string
-    contactPerson?: StringFilter<"ClientData"> | string
+    clientContactId?: StringFilter<"ClientData"> | string
+    clientNotes?: StringNullableFilter<"ClientData"> | string | null
     contactPeople?: ClientContactListRelationFilter
     collaborations?: CollaborationsListRelationFilter
   }, "id">
@@ -6072,7 +6145,8 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    contactPerson?: SortOrder
+    clientContactId?: SortOrder
+    clientNotes?: SortOrderInput | SortOrder
     _count?: ClientDataCountOrderByAggregateInput
     _max?: ClientDataMaxOrderByAggregateInput
     _min?: ClientDataMinOrderByAggregateInput
@@ -6086,7 +6160,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ClientData"> | string
     instagram?: StringNullableWithAggregatesFilter<"ClientData"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ClientData"> | Date | string
-    contactPerson?: StringWithAggregatesFilter<"ClientData"> | string
+    clientContactId?: StringWithAggregatesFilter<"ClientData"> | string
+    clientNotes?: StringNullableWithAggregatesFilter<"ClientData"> | string | null
   }
 
   export type ClientContactWhereInput = {
@@ -6099,6 +6174,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"ClientContact"> | string | null
     createdAt?: DateTimeFilter<"ClientContact"> | Date | string
     clientId?: StringFilter<"ClientContact"> | string
+    contactNotes?: StringNullableFilter<"ClientContact"> | string | null
+    gender?: EnumCsGenderFilter<"ClientContact"> | $Enums.CsGender
     client?: XOR<ClientDataScalarRelationFilter, ClientDataWhereInput>
   }
 
@@ -6109,6 +6186,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     clientId?: SortOrder
+    contactNotes?: SortOrderInput | SortOrder
+    gender?: SortOrder
     client?: ClientDataOrderByWithRelationInput
   }
 
@@ -6122,6 +6201,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"ClientContact"> | string | null
     createdAt?: DateTimeFilter<"ClientContact"> | Date | string
     clientId?: StringFilter<"ClientContact"> | string
+    contactNotes?: StringNullableFilter<"ClientContact"> | string | null
+    gender?: EnumCsGenderFilter<"ClientContact"> | $Enums.CsGender
     client?: XOR<ClientDataScalarRelationFilter, ClientDataWhereInput>
   }, "id">
 
@@ -6132,6 +6213,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     clientId?: SortOrder
+    contactNotes?: SortOrderInput | SortOrder
+    gender?: SortOrder
     _count?: ClientContactCountOrderByAggregateInput
     _max?: ClientContactMaxOrderByAggregateInput
     _min?: ClientContactMinOrderByAggregateInput
@@ -6147,6 +6230,8 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"ClientContact"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ClientContact"> | Date | string
     clientId?: StringWithAggregatesFilter<"ClientContact"> | string
+    contactNotes?: StringNullableWithAggregatesFilter<"ClientContact"> | string | null
+    gender?: EnumCsGenderWithAggregatesFilter<"ClientContact"> | $Enums.CsGender
   }
 
   export type CollaborationsWhereInput = {
@@ -6331,7 +6416,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
     contactPeople?: ClientContactCreateNestedManyWithoutClientInput
     collaborations?: CollaborationsCreateNestedManyWithoutClientInput
   }
@@ -6341,7 +6427,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
     contactPeople?: ClientContactUncheckedCreateNestedManyWithoutClientInput
     collaborations?: CollaborationsUncheckedCreateNestedManyWithoutClientInput
   }
@@ -6351,7 +6438,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUpdateManyWithoutClientNestedInput
     collaborations?: CollaborationsUpdateManyWithoutClientNestedInput
   }
@@ -6361,7 +6449,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUncheckedUpdateManyWithoutClientNestedInput
     collaborations?: CollaborationsUncheckedUpdateManyWithoutClientNestedInput
   }
@@ -6371,7 +6460,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
   }
 
   export type ClientDataUpdateManyMutationInput = {
@@ -6379,7 +6469,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ClientDataUncheckedUpdateManyInput = {
@@ -6387,7 +6478,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ClientContactCreateInput = {
@@ -6396,6 +6488,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     createdAt?: Date | string
+    contactNotes?: string | null
+    gender?: $Enums.CsGender
     client: ClientDataCreateNestedOneWithoutContactPeopleInput
   }
 
@@ -6406,6 +6500,8 @@ export namespace Prisma {
     phone?: string | null
     createdAt?: Date | string
     clientId: string
+    contactNotes?: string | null
+    gender?: $Enums.CsGender
   }
 
   export type ClientContactUpdateInput = {
@@ -6414,6 +6510,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
     client?: ClientDataUpdateOneRequiredWithoutContactPeopleNestedInput
   }
 
@@ -6424,6 +6522,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     clientId?: StringFieldUpdateOperationsInput | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
   }
 
   export type ClientContactCreateManyInput = {
@@ -6433,6 +6533,8 @@ export namespace Prisma {
     phone?: string | null
     createdAt?: Date | string
     clientId: string
+    contactNotes?: string | null
+    gender?: $Enums.CsGender
   }
 
   export type ClientContactUpdateManyMutationInput = {
@@ -6441,6 +6543,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
   }
 
   export type ClientContactUncheckedUpdateManyInput = {
@@ -6450,6 +6554,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     clientId?: StringFieldUpdateOperationsInput | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
   }
 
   export type CollaborationsCreateInput = {
@@ -6784,7 +6890,8 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrder
     createdAt?: SortOrder
-    contactPerson?: SortOrder
+    clientContactId?: SortOrder
+    clientNotes?: SortOrder
   }
 
   export type ClientDataMaxOrderByAggregateInput = {
@@ -6792,7 +6899,8 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrder
     createdAt?: SortOrder
-    contactPerson?: SortOrder
+    clientContactId?: SortOrder
+    clientNotes?: SortOrder
   }
 
   export type ClientDataMinOrderByAggregateInput = {
@@ -6800,7 +6908,8 @@ export namespace Prisma {
     name?: SortOrder
     instagram?: SortOrder
     createdAt?: SortOrder
-    contactPerson?: SortOrder
+    clientContactId?: SortOrder
+    clientNotes?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -6835,6 +6944,13 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumCsGenderFilter<$PrismaModel = never> = {
+    equals?: $Enums.CsGender | EnumCsGenderFieldRefInput<$PrismaModel>
+    in?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    not?: NestedEnumCsGenderFilter<$PrismaModel> | $Enums.CsGender
+  }
+
   export type ClientDataScalarRelationFilter = {
     is?: ClientDataWhereInput
     isNot?: ClientDataWhereInput
@@ -6847,6 +6963,8 @@ export namespace Prisma {
     phone?: SortOrder
     createdAt?: SortOrder
     clientId?: SortOrder
+    contactNotes?: SortOrder
+    gender?: SortOrder
   }
 
   export type ClientContactMaxOrderByAggregateInput = {
@@ -6856,6 +6974,8 @@ export namespace Prisma {
     phone?: SortOrder
     createdAt?: SortOrder
     clientId?: SortOrder
+    contactNotes?: SortOrder
+    gender?: SortOrder
   }
 
   export type ClientContactMinOrderByAggregateInput = {
@@ -6865,6 +6985,18 @@ export namespace Prisma {
     phone?: SortOrder
     createdAt?: SortOrder
     clientId?: SortOrder
+    contactNotes?: SortOrder
+    gender?: SortOrder
+  }
+
+  export type EnumCsGenderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CsGender | EnumCsGenderFieldRefInput<$PrismaModel>
+    in?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    not?: NestedEnumCsGenderWithAggregatesFilter<$PrismaModel> | $Enums.CsGender
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCsGenderFilter<$PrismaModel>
+    _max?: NestedEnumCsGenderFilter<$PrismaModel>
   }
 
   export type EnumCollabTypeFilter<$PrismaModel = never> = {
@@ -7154,6 +7286,10 @@ export namespace Prisma {
     connect?: ClientDataWhereUniqueInput
   }
 
+  export type EnumCsGenderFieldUpdateOperationsInput = {
+    set?: $Enums.CsGender
+  }
+
   export type ClientDataUpdateOneRequiredWithoutContactPeopleNestedInput = {
     create?: XOR<ClientDataCreateWithoutContactPeopleInput, ClientDataUncheckedCreateWithoutContactPeopleInput>
     connectOrCreate?: ClientDataCreateOrConnectWithoutContactPeopleInput
@@ -7387,6 +7523,23 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumCsGenderFilter<$PrismaModel = never> = {
+    equals?: $Enums.CsGender | EnumCsGenderFieldRefInput<$PrismaModel>
+    in?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    not?: NestedEnumCsGenderFilter<$PrismaModel> | $Enums.CsGender
+  }
+
+  export type NestedEnumCsGenderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CsGender | EnumCsGenderFieldRefInput<$PrismaModel>
+    in?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CsGender[] | ListEnumCsGenderFieldRefInput<$PrismaModel>
+    not?: NestedEnumCsGenderWithAggregatesFilter<$PrismaModel> | $Enums.CsGender
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCsGenderFilter<$PrismaModel>
+    _max?: NestedEnumCsGenderFilter<$PrismaModel>
+  }
+
   export type NestedEnumCollabTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.CollabType | EnumCollabTypeFieldRefInput<$PrismaModel>
     in?: $Enums.CollabType[] | ListEnumCollabTypeFieldRefInput<$PrismaModel>
@@ -7488,6 +7641,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     createdAt?: Date | string
+    contactNotes?: string | null
+    gender?: $Enums.CsGender
   }
 
   export type ClientContactUncheckedCreateWithoutClientInput = {
@@ -7496,6 +7651,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     createdAt?: Date | string
+    contactNotes?: string | null
+    gender?: $Enums.CsGender
   }
 
   export type ClientContactCreateOrConnectWithoutClientInput = {
@@ -7582,6 +7739,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"ClientContact"> | string | null
     createdAt?: DateTimeFilter<"ClientContact"> | Date | string
     clientId?: StringFilter<"ClientContact"> | string
+    contactNotes?: StringNullableFilter<"ClientContact"> | string | null
+    gender?: EnumCsGenderFilter<"ClientContact"> | $Enums.CsGender
   }
 
   export type CollaborationsUpsertWithWhereUniqueWithoutClientInput = {
@@ -7628,7 +7787,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
     collaborations?: CollaborationsCreateNestedManyWithoutClientInput
   }
 
@@ -7637,7 +7797,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
     collaborations?: CollaborationsUncheckedCreateNestedManyWithoutClientInput
   }
 
@@ -7662,7 +7823,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     collaborations?: CollaborationsUpdateManyWithoutClientNestedInput
   }
 
@@ -7671,7 +7833,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     collaborations?: CollaborationsUncheckedUpdateManyWithoutClientNestedInput
   }
 
@@ -7680,7 +7843,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
     contactPeople?: ClientContactCreateNestedManyWithoutClientInput
   }
 
@@ -7689,7 +7853,8 @@ export namespace Prisma {
     name: string
     instagram?: string | null
     createdAt?: Date | string
-    contactPerson: string
+    clientContactId: string
+    clientNotes?: string | null
     contactPeople?: ClientContactUncheckedCreateNestedManyWithoutClientInput
   }
 
@@ -7714,7 +7879,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUpdateManyWithoutClientNestedInput
   }
 
@@ -7723,7 +7889,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     instagram?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
+    clientContactId?: StringFieldUpdateOperationsInput | string
+    clientNotes?: NullableStringFieldUpdateOperationsInput | string | null
     contactPeople?: ClientContactUncheckedUpdateManyWithoutClientNestedInput
   }
 
@@ -7733,6 +7900,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     createdAt?: Date | string
+    contactNotes?: string | null
+    gender?: $Enums.CsGender
   }
 
   export type CollaborationsCreateManyClientInput = {
@@ -7760,6 +7929,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
   }
 
   export type ClientContactUncheckedUpdateWithoutClientInput = {
@@ -7768,6 +7939,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
   }
 
   export type ClientContactUncheckedUpdateManyWithoutClientInput = {
@@ -7776,6 +7949,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contactNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumCsGenderFieldUpdateOperationsInput | $Enums.CsGender
   }
 
   export type CollaborationsUpdateWithoutClientInput = {

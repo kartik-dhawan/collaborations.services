@@ -16,11 +16,130 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type ClientContactDetails = {
+  __typename?: 'ClientContactDetails';
+  client: ClientDetails;
+  clientNotes?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
+};
+
+export type ClientDetails = {
+  __typename?: 'ClientDetails';
+  clientContacts: Array<ClientContactDetails>;
+  clientNotes?: Maybe<Scalars['String']['output']>;
+  collaborations: Array<Collaboration>;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  instagram?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
+export type Collaboration = {
+  __typename?: 'Collaboration';
+  client: ClientDetails;
+  clientId: Scalars['String']['output'];
+  collabNotes?: Maybe<Scalars['String']['output']>;
+  collabStatus: CsCollabStatus;
+  createdAt: Scalars['String']['output'];
+  dealDate?: Maybe<Scalars['String']['output']>;
+  deliverableDate?: Maybe<Scalars['String']['output']>;
+  deliverableLink?: Maybe<Scalars['String']['output']>;
+  deliverableNotes?: Maybe<Scalars['String']['output']>;
+  deliverableStatus: CsDeliverableStatus;
+  deliverables: Array<CsCollabDeliverables>;
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  paymentAmount?: Maybe<Scalars['Int']['output']>;
+  paymentDate?: Maybe<Scalars['String']['output']>;
+  paymentStatus: CsPaymentStatus;
+  type: CsCollabType;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type CreateClientContactPayload = {
+  clientNotes?: InputMaybe<Scalars['String']['input']>;
+  createdAt: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  phone?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateClientPayload = {
+  clientContacts: Array<CreateClientContactPayload>;
+  clientNotes?: InputMaybe<Scalars['String']['input']>;
+  createdAt: Scalars['String']['input'];
+  instagram?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+export type CreateCollaborationPayload = {
+  clientPayload: CreateClientPayload;
+  collabNotes?: InputMaybe<Scalars['String']['input']>;
+  collabStatus: CsCollabStatus;
+  createdAt: Scalars['String']['input'];
+  dealDate?: InputMaybe<Scalars['String']['input']>;
+  deliverableDate: Scalars['String']['input'];
+  deliverableLink?: InputMaybe<Scalars['String']['input']>;
+  deliverableNotes?: InputMaybe<Scalars['String']['input']>;
+  deliverableStatus: CsDeliverableStatus;
+  deliverables: Array<CsCollabDeliverables>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentAmount?: InputMaybe<Scalars['Int']['input']>;
+  paymentDate?: InputMaybe<Scalars['String']['input']>;
+  paymentStatus: CsPaymentStatus;
+  type: CsCollabType;
+  updatedAt?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreateUserPayload = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   role?: InputMaybe<UserRole>;
 };
+
+export enum CsCollabDeliverables {
+  CarouselPost = 'CAROUSEL_POST',
+  CarouselPostWithoutCollab = 'CAROUSEL_POST_WITHOUT_COLLAB',
+  PhotoShoot = 'PHOTO_SHOOT',
+  Reel = 'REEL',
+  ReelWithoutCollab = 'REEL_WITHOUT_COLLAB',
+  SongPromotion = 'SONG_PROMOTION',
+  Stories = 'STORIES',
+  VideoEdit = 'VIDEO_EDIT'
+}
+
+export enum CsCollabStatus {
+  Completed = 'COMPLETED',
+  DidNotHappen = 'DID_NOT_HAPPEN',
+  Finalised = 'FINALISED'
+}
+
+export enum CsCollabType {
+  BarterCollaboration = 'BARTER_COLLABORATION',
+  PaidCollaboration = 'PAID_COLLABORATION',
+  PaidGig = 'PAID_GIG',
+  PaidPromotion = 'PAID_PROMOTION',
+  UnpaidCollaboration = 'UNPAID_COLLABORATION'
+}
+
+export enum CsDeliverableStatus {
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  InProgress = 'IN_PROGRESS',
+  InReview = 'IN_REVIEW',
+  Rejected = 'REJECTED'
+}
+
+export enum CsPaymentStatus {
+  Paid = 'PAID',
+  Pending = 'PENDING',
+  Unpaid = 'UNPAID'
+}
 
 export enum DeleteStatus {
   Failed = 'FAILED',
@@ -41,6 +160,7 @@ export type FetchUserPayload = {
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
+  csCreateCollaboration: Collaboration;
   deleteAUser: DeleteUserResponse;
   updateUser: User;
 };
@@ -48,6 +168,11 @@ export type Mutation = {
 
 export type MutationCreateUserArgs = {
   payload: CreateUserPayload;
+};
+
+
+export type MutationCsCreateCollaborationArgs = {
+  payload: CreateCollaborationPayload;
 };
 
 
@@ -67,6 +192,7 @@ export enum OrderBy {
 
 export type Query = {
   __typename?: 'Query';
+  csGetCollaborations: Array<Collaboration>;
   getAllUsers?: Maybe<Array<User>>;
   getUserById: User;
 };
@@ -190,10 +316,22 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  ClientContactDetails: ResolverTypeWrapper<ClientContactDetails>;
+  ClientDetails: ResolverTypeWrapper<ClientDetails>;
+  Collaboration: ResolverTypeWrapper<Collaboration>;
+  CreateClientContactPayload: CreateClientContactPayload;
+  CreateClientPayload: CreateClientPayload;
+  CreateCollaborationPayload: CreateCollaborationPayload;
   CreateUserPayload: CreateUserPayload;
+  CsCollabDeliverables: CsCollabDeliverables;
+  CsCollabStatus: CsCollabStatus;
+  CsCollabType: CsCollabType;
+  CsDeliverableStatus: CsDeliverableStatus;
+  CsPaymentStatus: CsPaymentStatus;
   DeleteStatus: DeleteStatus;
   DeleteUserResponse: ResolverTypeWrapper<DeleteUserResponse>;
   FetchUserPayload: FetchUserPayload;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OrderBy: OrderBy;
@@ -210,9 +348,16 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  ClientContactDetails: ClientContactDetails;
+  ClientDetails: ClientDetails;
+  Collaboration: Collaboration;
+  CreateClientContactPayload: CreateClientContactPayload;
+  CreateClientPayload: CreateClientPayload;
+  CreateCollaborationPayload: CreateCollaborationPayload;
   CreateUserPayload: CreateUserPayload;
   DeleteUserResponse: DeleteUserResponse;
   FetchUserPayload: FetchUserPayload;
+  ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
@@ -223,6 +368,50 @@ export type ResolversParentTypes = {
   UserSorting: UserSorting;
 };
 
+export type ClientContactDetailsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ClientContactDetails'] = ResolversParentTypes['ClientContactDetails']> = {
+  client?: Resolver<ResolversTypes['ClientDetails'], ParentType, ContextType>;
+  clientNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ClientDetailsResolvers<ContextType = any, ParentType extends ResolversParentTypes['ClientDetails'] = ResolversParentTypes['ClientDetails']> = {
+  clientContacts?: Resolver<Array<ResolversTypes['ClientContactDetails']>, ParentType, ContextType>;
+  clientNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  collaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  instagram?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CollaborationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Collaboration'] = ResolversParentTypes['Collaboration']> = {
+  client?: Resolver<ResolversTypes['ClientDetails'], ParentType, ContextType>;
+  clientId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  collabNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  collabStatus?: Resolver<ResolversTypes['CsCollabStatus'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  dealDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deliverableDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deliverableLink?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deliverableNotes?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  deliverableStatus?: Resolver<ResolversTypes['CsDeliverableStatus'], ParentType, ContextType>;
+  deliverables?: Resolver<Array<ResolversTypes['CsCollabDeliverables']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  paymentAmount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  paymentDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  paymentStatus?: Resolver<ResolversTypes['CsPaymentStatus'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['CsCollabType'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteUserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteUserResponse'] = ResolversParentTypes['DeleteUserResponse']> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['DeleteStatus'], ParentType, ContextType>;
@@ -231,11 +420,13 @@ export type DeleteUserResponseResolvers<ContextType = any, ParentType extends Re
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'payload'>>;
+  csCreateCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, RequireFields<MutationCsCreateCollaborationArgs, 'payload'>>;
   deleteAUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteAUserArgs, 'id'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  csGetCollaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
   getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
 };
@@ -251,6 +442,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  ClientContactDetails?: ClientContactDetailsResolvers<ContextType>;
+  ClientDetails?: ClientDetailsResolvers<ContextType>;
+  Collaboration?: CollaborationResolvers<ContextType>;
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
