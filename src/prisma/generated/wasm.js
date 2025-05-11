@@ -129,6 +129,43 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ClientDataScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  instagram: 'instagram',
+  createdAt: 'createdAt',
+  contactPerson: 'contactPerson'
+};
+
+exports.Prisma.ClientContactScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  createdAt: 'createdAt',
+  clientId: 'clientId'
+};
+
+exports.Prisma.CollaborationsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  collabStatus: 'collabStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  dealDate: 'dealDate',
+  paymentStatus: 'paymentStatus',
+  paymentAmount: 'paymentAmount',
+  paymentDate: 'paymentDate',
+  clientId: 'clientId',
+  deliverables: 'deliverables',
+  deliverableDate: 'deliverableDate',
+  deliverableLink: 'deliverableLink',
+  deliverableStatus: 'deliverableStatus',
+  deliverableNotes: 'deliverableNotes',
+  collabNotes: 'collabNotes'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -148,8 +185,51 @@ exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN'
 };
 
+exports.CollabType = exports.$Enums.CollabType = {
+  UNPAID_COLLABORATION: 'UNPAID_COLLABORATION',
+  PAID_COLLABORATION: 'PAID_COLLABORATION',
+  BARTER_COLLABORATION: 'BARTER_COLLABORATION',
+  PAID_PROMOTION: 'PAID_PROMOTION',
+  PAID_GIG: 'PAID_GIG'
+};
+
+exports.CollaborationStatus = exports.$Enums.CollaborationStatus = {
+  FINALISED: 'FINALISED',
+  DID_NOT_HAPPEN: 'DID_NOT_HAPPEN',
+  COMPLETED: 'COMPLETED'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  UNPAID: 'UNPAID'
+};
+
+exports.DeliverableStatus = exports.$Enums.DeliverableStatus = {
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  REJECTED: 'REJECTED',
+  APPROVED: 'APPROVED',
+  IN_REVIEW: 'IN_REVIEW'
+};
+
+exports.CollaborationDeliverables = exports.$Enums.CollaborationDeliverables = {
+  REEL: 'REEL',
+  REEL_WITHOUT_COLLAB: 'REEL_WITHOUT_COLLAB',
+  CAROUSEL_POST: 'CAROUSEL_POST',
+  CAROUSEL_POST_WITHOUT_COLLAB: 'CAROUSEL_POST_WITHOUT_COLLAB',
+  STORIES: 'STORIES',
+  SONG_PROMOTION: 'SONG_PROMOTION',
+  PHOTO_SHOOT: 'PHOTO_SHOOT',
+  VIDEO_EDIT: 'VIDEO_EDIT'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  ClientData: 'ClientData',
+  ClientContact: 'ClientContact',
+  Collaborations: 'Collaborations'
 };
 
 /**

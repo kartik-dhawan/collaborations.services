@@ -23,7 +23,88 @@ model User {
   updatedAt DateTime? @updatedAt
 }
 
+model ClientData {
+  id             String           @id @default(uuid())
+  name           String
+  instagram      String?
+  createdAt      DateTime         @default(now())
+  contactPerson  String
+  contactPeople  ClientContact[]  @relation("clientToContact")
+  collaborations Collaborations[] @relation("clientToCollab")
+}
+
+model ClientContact {
+  id        String     @id @default(uuid())
+  name      String?
+  email     String?
+  phone     String?
+  createdAt DateTime   @default(now())
+  clientId  String
+  client    ClientData @relation("clientToContact", fields: [clientId], references: [id])
+}
+
+model Collaborations {
+  id                String                      @id @default(uuid())
+  name              String?
+  type              CollabType
+  collabStatus      CollaborationStatus
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime?                   @updatedAt
+  dealDate          DateTime?
+  paymentStatus     PaymentStatus               @default(PENDING)
+  paymentAmount     Int?                        @default(0)
+  paymentDate       DateTime?
+  clientId          String
+  client            ClientData                  @relation("clientToCollab", fields: [clientId], references: [id])
+  deliverables      CollaborationDeliverables[]
+  deliverableDate   DateTime?
+  deliverableLink   String?
+  deliverableStatus DeliverableStatus           @default(IN_REVIEW)
+  deliverableNotes  String?
+  collabNotes       String?
+}
+
 enum Role {
   USER
   ADMIN
+}
+
+enum CollabType {
+  UNPAID_COLLABORATION
+  PAID_COLLABORATION
+  BARTER_COLLABORATION
+  PAID_PROMOTION
+  PAID_GIG
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  UNPAID
+}
+
+enum CollaborationStatus {
+  FINALISED
+  DID_NOT_HAPPEN
+  COMPLETED
+}
+
+enum CollaborationDeliverables {
+  REEL
+  REEL_WITHOUT_COLLAB
+  CAROUSEL_POST
+  CAROUSEL_POST_WITHOUT_COLLAB
+  STORIES
+  SONG_PROMOTION
+  PHOTO_SHOOT
+  VIDEO_EDIT
+}
+
+enum DeliverableStatus {
+  COMPLETED
+  CANCELLED
+  IN_PROGRESS
+  REJECTED
+  APPROVED
+  IN_REVIEW
 }
