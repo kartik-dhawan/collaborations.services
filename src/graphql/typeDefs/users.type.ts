@@ -19,6 +19,12 @@ const userDefs = gql`
     name: String
     role: UserRole
   }
+
+  input CreateUserPayload {
+    email: String!
+    name: String!
+    role: UserRole
+  }
 `;
 
 export default userDefs;

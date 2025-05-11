@@ -1,5 +1,10 @@
 import prisma from "../../prisma/index.ts";
-import { UpdateUserPayload, User, UserRole } from "../generated/graphql.ts";
+import {
+  CreateUserPayload,
+  UpdateUserPayload,
+  User,
+  UserRole,
+} from "../generated/graphql.ts";
 
 export const fetchAllUsers = async () => {
   // fetch all users from DB - user
@@ -50,6 +55,26 @@ export const updateUserDetails = async (payload: UpdateUserPayload) => {
   const finalRes: User = {
     ...updatedUser,
     role: updatedUser.role as UserRole,
+  };
+
+  return finalRes;
+};
+
+export const createNewUser = async (payload: CreateUserPayload) => {
+  // create new user in db using prisma client
+  const createdUser = await prisma.user.create({
+    data: {
+      email: payload.email, // required
+      name: payload.name, // required
+      role: payload.role, // default role auto handled in DB
+    },
+  });
+
+  const finalRes: User = {
+    email: createdUser.email,
+    id: createdUser.id,
+    name: createdUser.name,
+    role: createdUser.role as UserRole,
   };
 
   return finalRes;

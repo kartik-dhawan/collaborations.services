@@ -16,9 +16,21 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CreateUserPayload = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  role?: InputMaybe<UserRole>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createUser: User;
   updateUser: User;
+};
+
+
+export type MutationCreateUserArgs = {
+  payload: CreateUserPayload;
 };
 
 
@@ -129,6 +141,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateUserPayload: CreateUserPayload;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -141,6 +154,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  CreateUserPayload: CreateUserPayload;
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
@@ -150,6 +164,7 @@ export type ResolversParentTypes = {
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'payload'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };
 

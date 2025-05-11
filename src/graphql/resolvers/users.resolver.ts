@@ -1,6 +1,7 @@
 import { GraphQLError } from "graphql";
 import { Resolvers, User } from "../generated/graphql.ts";
 import {
+  createNewUser,
   fetchAllUsers,
   fetchUserById,
   updateUserDetails,
@@ -35,6 +36,17 @@ export const userMutations: Resolvers["Mutation"] = {
     try {
       const updatedUser = await updateUserDetails(payload);
       return updatedUser;
+    } catch (error) {
+      throw new GraphQLError(
+        error instanceof Error ? error.message : error.toString()
+      );
+    }
+  },
+
+  createUser: async (_, { payload }) => {
+    try {
+      const createdUser = await createNewUser(payload);
+      return createdUser;
     } catch (error) {
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()
