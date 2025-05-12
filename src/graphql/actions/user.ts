@@ -31,29 +31,25 @@ export const fetchAllUsers = async (
 ) => {
   // fetch all users from DB - user
   const users = await prisma.user.findMany(
-    payload
-      ? {
-          // also add searching filter to it
-          where: {
-            AND:
-              payload.search?.map((it) => {
-                return {
-                  [it.key]: {
-                    contains: it?.value,
-                    mode: "insensitive",
-                  },
-                };
-              }) ?? [],
-          },
-          // add sorting technique for user table
-          orderBy: payload.sort
-            ? {
-                [payload.sort.key]:
-                  graphQLToPrismaSortingLabels[payload.sort.value],
-              }
-            : {},
-        }
-      : {}
+    payload && {
+      where: {
+        AND:
+          payload?.search?.map((it) => {
+            return {
+              [it.key]: {
+                contains: it?.value,
+                mode: "insensitive",
+              },
+            };
+          }) ?? [],
+      },
+      orderBy: payload?.sort
+        ? {
+            [payload.sort.key]:
+              graphQLToPrismaSortingLabels[payload.sort.value],
+          }
+        : {},
+    }
   );
 
   // map data from Prisma schema to graphql Schema
