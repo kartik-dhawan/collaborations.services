@@ -10,7 +10,7 @@
     "start": "npm run compile && node ./dist/index.js",
     "serve": "nodemon",
     "codegen:generate": "graphql-codegen",
-    "prisma:generate": "prisma generate --no-engine",
+    "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev"
   },
   "keywords": [],

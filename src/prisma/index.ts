@@ -1,7 +1,7 @@
-import "dotenv/config";
 import { PrismaClient } from "./generated/index.js";
 
 const connectionString = `${process.env.DATABASE_URL}`;
+
 /**
  * Prisma Client doesn’t embed your DB URL at build time.
  * By default (when you don’t use Data Proxy), your schema.prisma points at
