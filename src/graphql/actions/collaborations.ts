@@ -8,6 +8,45 @@ import {
   CsDeliverableStatus,
   CsPaymentStatus,
 } from "../generated/graphql.ts";
+import { CollaborationWithClientToGQL } from "./interfaces.ts";
+
+// This is a mapper function to convert the Prisma data structure to the GraphQL data structure
+const collborationDataMapper = (
+  data: CollaborationWithClientToGQL
+): Collaboration => ({
+  collabNotes: data.collabNotes,
+  collabStatus: data.collabStatus as CsCollabStatus,
+  createdAt: data.createdAt.toISOString(),
+  dealDate: data.dealDate?.toISOString(),
+  deliverableDate: data.deliverableDate?.toISOString(),
+  deliverableLink: data.deliverableLink,
+  deliverableNotes: data.deliverableNotes,
+  deliverableStatus: data.deliverableStatus as CsDeliverableStatus,
+  id: data.id,
+  name: data.name,
+  paymentAmount: data.paymentAmount,
+  paymentDate: data.paymentDate?.toISOString(),
+  paymentStatus: data.paymentStatus as CsPaymentStatus,
+  type: data.type as CsCollabType,
+  updatedAt: data.updatedAt?.toISOString(),
+  deliverables: data.deliverables as CsCollabDeliverables[],
+  client: {
+    id: data.client.id,
+    name: data.client.name,
+    instagram: data.client.instagram,
+    clientNotes: data.client.clientNotes,
+    createdAt: data.client.createdAt.toISOString(),
+    clientContacts:
+      data.client.contactPeople.map((contact) => ({
+        id: contact.id,
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone,
+        createdAt: contact.createdAt.toISOString(),
+        clientNotes: contact.contactNotes,
+      })) ?? [],
+  },
+});
 
 export const createNewCollaboration = async (
   payload: CreateCollaborationPayload
@@ -52,40 +91,7 @@ export const createNewCollaboration = async (
     },
   });
 
-  const finalRes: Collaboration = {
-    collabNotes: createdCollab.collabNotes,
-    collabStatus: createdCollab.collabStatus as CsCollabStatus,
-    createdAt: createdCollab.createdAt.toISOString(),
-    dealDate: createdCollab.dealDate?.toISOString(),
-    deliverableDate: createdCollab.deliverableDate?.toISOString(),
-    deliverableLink: createdCollab.deliverableLink,
-    deliverableNotes: createdCollab.deliverableNotes,
-    deliverableStatus: createdCollab.deliverableStatus as CsDeliverableStatus,
-    id: createdCollab.id,
-    name: createdCollab.name,
-    paymentAmount: createdCollab.paymentAmount,
-    paymentDate: createdCollab.paymentDate?.toISOString(),
-    paymentStatus: createdCollab.paymentStatus as CsPaymentStatus,
-    type: createdCollab.type as CsCollabType,
-    updatedAt: createdCollab.updatedAt?.toISOString(),
-    deliverables: createdCollab.deliverables as CsCollabDeliverables[],
-    client: {
-      id: createdCollab.client.id,
-      name: createdCollab.client.name,
-      instagram: createdCollab.client.instagram,
-      clientNotes: createdCollab.client.clientNotes,
-      createdAt: createdCollab.client.createdAt.toISOString(),
-      clientContacts:
-        createdCollab.client.contactPeople.map((contact) => ({
-          id: contact.id,
-          name: contact.name,
-          email: contact.email,
-          phone: contact.phone,
-          createdAt: contact.createdAt.toISOString(),
-          clientNotes: contact.contactNotes,
-        })) ?? [],
-    },
-  };
+  const finalRes: Collaboration = collborationDataMapper(createdCollab);
 
   return finalRes;
 };
@@ -101,37 +107,5 @@ export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
     },
   });
 
-  return (await collabs).map((item) => ({
-    collabStatus: item.collabStatus as CsCollabStatus,
-    createdAt: item.createdAt.toISOString(),
-    dealDate: item.dealDate?.toISOString(),
-    deliverableDate: item.deliverableDate?.toISOString(),
-    deliverableLink: item.deliverableLink,
-    deliverableNotes: item.deliverableNotes,
-    deliverableStatus: item.deliverableStatus as CsDeliverableStatus,
-    id: item.id,
-    name: item.name,
-    paymentAmount: item.paymentAmount,
-    paymentDate: item.paymentDate?.toISOString(),
-    paymentStatus: item.paymentStatus as CsPaymentStatus,
-    type: item.type as CsCollabType,
-    updatedAt: item.updatedAt?.toISOString(),
-    deliverables: item.deliverables as CsCollabDeliverables[],
-    client: {
-      id: item.client.id,
-      name: item.client.name,
-      instagram: item.client.instagram,
-      clientNotes: item.client.clientNotes,
-      createdAt: item.client.createdAt.toISOString(),
-      clientContacts:
-        item.client.contactPeople.map((contact) => ({
-          id: contact.id,
-          name: contact.name,
-          email: contact.email,
-          phone: contact.phone,
-          createdAt: contact.createdAt.toISOString(),
-          clientNotes: contact.contactNotes,
-        })) ?? [],
-    },
-  }));
+  return (await collabs).map((item) => collborationDataMapper(item));
 };

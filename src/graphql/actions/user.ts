@@ -3,8 +3,8 @@ import {
   CreateUserPayload,
   DeleteStatus,
   DeleteUserResponse,
-  FetchUserPayload,
-  UpdateUserPayload,
+  MutationUpdateUserArgs,
+  QueryGetAllUsersArgs,
   User,
   UserRole,
 } from "../generated/graphql.ts";
@@ -12,8 +12,23 @@ import {
   graphQLToPrismaSortingLabels,
   responseMessages,
 } from "../utils/index.ts";
+import { UserPrismaToGQL } from "./interfaces.ts";
 
-export const fetchAllUsers = async (payload?: FetchUserPayload) => {
+// This is a mapper function to convert the Prisma data structure to the GraphQL data structure
+export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
+  return {
+    email: data.email,
+    id: data.id,
+    name: data.name,
+    role: data.role as UserRole,
+    createdAt: data.createdAt.toISOString(),
+    updatedAt: data.updatedAt.toISOString(),
+  };
+};
+
+export const fetchAllUsers = async (
+  payload?: QueryGetAllUsersArgs["payload"]
+) => {
   // fetch all users from DB - user
   const users = await prisma.user.findMany(
     payload
@@ -61,17 +76,14 @@ export const fetchUserById = async (userId: number) => {
   });
 
   // map data from Prisma schema to graphql Schema
-  const finalRes: User = {
-    ...user,
-    role: user?.role as UserRole,
-    createdAt: user.createdAt.toISOString(),
-    updatedAt: user.updatedAt.toISOString(),
-  };
+  const finalRes: User = userDataMapperToGQL(user);
 
   return finalRes;
 };
 
-export const updateUserDetails = async (payload: UpdateUserPayload) => {
+export const updateUserDetails = async (
+  payload: MutationUpdateUserArgs["payload"]
+) => {
   // update the user in DB
   const updatedUser = await prisma.user.update({
     // match the user by ID
@@ -87,12 +99,7 @@ export const updateUserDetails = async (payload: UpdateUserPayload) => {
   });
 
   // map data from Prisma schema to graphql Schema
-  const finalRes: User = {
-    ...updatedUser,
-    role: updatedUser.role as UserRole,
-    createdAt: updatedUser.createdAt.toISOString(),
-    updatedAt: updatedUser.updatedAt.toISOString(),
-  };
+  const finalRes: User = userDataMapperToGQL(updatedUser);
 
   return finalRes;
 };
@@ -107,14 +114,7 @@ export const createNewUser = async (payload: CreateUserPayload) => {
     },
   });
 
-  const finalRes: User = {
-    email: createdUser.email,
-    id: createdUser.id,
-    name: createdUser.name,
-    role: createdUser.role as UserRole,
-    createdAt: createdUser.createdAt.toISOString(),
-    updatedAt: createdUser.updatedAt.toISOString(),
-  };
+  const finalRes: User = userDataMapperToGQL(createdUser);
 
   return finalRes;
 };
