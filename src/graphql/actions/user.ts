@@ -12,7 +12,7 @@ import {
   graphQLToPrismaSortingLabels,
   responseMessages,
 } from "../utils/index.ts";
-import { UserPrismaToGQL } from "./interfaces.ts";
+import { UserPrismaToGQL } from "../utils/interfaces.ts";
 
 // This is a mapper function to convert the Prisma data structure to the GraphQL data structure
 export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {

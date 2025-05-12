@@ -8,7 +8,7 @@ import {
   CsDeliverableStatus,
   CsPaymentStatus,
 } from "../generated/graphql.ts";
-import { CollaborationWithClientToGQL } from "./interfaces.ts";
+import { CollaborationWithClientToGQL } from "../utils/interfaces.ts";
 
 // This is a mapper function to convert the Prisma data structure to the GraphQL data structure
 const collborationDataMapper = (
