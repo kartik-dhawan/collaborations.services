@@ -162,6 +162,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
   csCreateCollaboration: Collaboration;
+  csEditCollaboration: Collaboration;
   deleteAUser: DeleteUserResponse;
   updateUser: User;
 };
@@ -174,6 +175,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationCsCreateCollaborationArgs = {
   payload: CreateCollaborationPayload;
+};
+
+
+export type MutationCsEditCollaborationArgs = {
+  payload?: InputMaybe<UpdateCollaborationPayload>;
 };
 
 
@@ -206,6 +212,30 @@ export type QueryGetAllUsersArgs = {
 
 export type QueryGetUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type UpdateCollabClientPayload = {
+  clientNotes?: InputMaybe<Scalars['String']['input']>;
+  instagram?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+export type UpdateCollaborationPayload = {
+  clientPayload?: InputMaybe<UpdateCollabClientPayload>;
+  collabNotes?: InputMaybe<Scalars['String']['input']>;
+  collabStatus?: InputMaybe<CsCollabStatus>;
+  dealDate?: InputMaybe<Scalars['String']['input']>;
+  deliverableDate?: InputMaybe<Scalars['String']['input']>;
+  deliverableLink?: InputMaybe<Scalars['String']['input']>;
+  deliverableNotes?: InputMaybe<Scalars['String']['input']>;
+  deliverableStatus?: InputMaybe<CsDeliverableStatus>;
+  deliverables?: InputMaybe<Array<CsCollabDeliverables>>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  paymentAmount?: InputMaybe<Scalars['Int']['input']>;
+  paymentDate?: InputMaybe<Scalars['String']['input']>;
+  paymentStatus?: InputMaybe<CsPaymentStatus>;
+  type?: InputMaybe<CsCollabType>;
 };
 
 export type UpdateUserPayload = {
@@ -339,6 +369,8 @@ export type ResolversTypes = {
   OrderBy: OrderBy;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateCollabClientPayload: UpdateCollabClientPayload;
+  UpdateCollaborationPayload: UpdateCollaborationPayload;
   UpdateUserPayload: UpdateUserPayload;
   User: ResolverTypeWrapper<User>;
   UserRole: UserRole;
@@ -364,6 +396,8 @@ export type ResolversParentTypes = {
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  UpdateCollabClientPayload: UpdateCollabClientPayload;
+  UpdateCollaborationPayload: UpdateCollaborationPayload;
   UpdateUserPayload: UpdateUserPayload;
   User: User;
   UserSearch: UserSearch;
@@ -420,6 +454,7 @@ export type DeleteUserResponseResolvers<ContextType = any, ParentType extends Re
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'payload'>>;
   csCreateCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, RequireFields<MutationCsCreateCollaborationArgs, 'payload'>>;
+  csEditCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, Partial<MutationCsEditCollaborationArgs>>;
   deleteAUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteAUserArgs, 'id'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };

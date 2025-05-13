@@ -38,6 +38,24 @@ const collaborationsDef = gql`
     clientPayload: CreateClientPayload!
   }
 
+  input UpdateCollaborationPayload {
+    id: ID!
+    name: String
+    type: CsCollabType
+    collabStatus: CsCollabStatus
+    dealDate: String
+    paymentStatus: CsPaymentStatus
+    paymentAmount: Int
+    paymentDate: String
+    deliverables: [CsCollabDeliverables!]
+    deliverableDate: String
+    deliverableLink: String
+    deliverableStatus: CsDeliverableStatus
+    deliverableNotes: String
+    collabNotes: String
+    clientPayload: UpdateCollabClientPayload
+  }
+
   enum CsCollabType {
     UNPAID_COLLABORATION
     PAID_COLLABORATION

@@ -34,6 +34,12 @@ const clientDefs = gql`
     clientNotes: String
   }
 
+  input UpdateCollabClientPayload {
+    name: String!
+    instagram: String
+    clientNotes: String
+  }
+
   enum CsGender {
     MALE
     FEMALE

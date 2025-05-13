@@ -9,6 +9,7 @@ const mutationDefs = gql`
 
     # COLLABORATION mutations
     csCreateCollaboration(payload: CreateCollaborationPayload!): Collaboration!
+    csEditCollaboration(payload: UpdateCollaborationPayload): Collaboration!
   }
 `;
 

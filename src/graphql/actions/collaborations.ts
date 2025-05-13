@@ -7,6 +7,7 @@ import {
   CsCollabType,
   CsDeliverableStatus,
   CsPaymentStatus,
+  UpdateCollaborationPayload,
 } from "../generated/graphql.ts";
 import { CollaborationWithClientToGQL } from "../utils/interfaces.ts";
 
@@ -47,6 +48,20 @@ const collborationDataMapper = (
       })) ?? [],
   },
 });
+
+export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
+  const collabs = prisma.collaborations.findMany({
+    include: {
+      client: {
+        include: {
+          contactPeople: true,
+        },
+      },
+    },
+  });
+
+  return (await collabs).map((item) => collborationDataMapper(item));
+};
 
 export const createNewCollaboration = async (
   payload: CreateCollaborationPayload
@@ -96,8 +111,39 @@ export const createNewCollaboration = async (
   return finalRes;
 };
 
-export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
-  const collabs = prisma.collaborations.findMany({
+export const updateCollaborationByID = async (
+  payload: UpdateCollaborationPayload
+) => {
+  const updatedUser = await prisma.collaborations.update({
+    where: {
+      id: payload.id,
+    },
+    data: {
+      collabStatus: payload.collabStatus,
+      type: payload.type,
+      name: payload.name,
+      collabNotes: payload.collabNotes,
+      dealDate: payload.dealDate ? new Date(payload.dealDate) : undefined,
+      deliverables: payload.deliverables,
+      deliverableStatus: payload.deliverableStatus,
+      deliverableDate: payload?.deliverableDate
+        ? new Date(payload?.deliverableDate)
+        : undefined,
+      deliverableLink: payload.deliverableLink,
+      paymentAmount: payload.paymentAmount,
+      paymentDate: payload.paymentDate
+        ? new Date(payload.paymentDate)
+        : undefined,
+      paymentStatus: payload.paymentStatus,
+      deliverableNotes: payload.deliverableNotes,
+      client: {
+        update: {
+          clientNotes: payload.clientPayload?.clientNotes,
+          instagram: payload.clientPayload?.instagram,
+          name: payload.clientPayload?.name,
+        },
+      },
+    },
     include: {
       client: {
         include: {
@@ -107,5 +153,7 @@ export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
     },
   });
 
-  return (await collabs).map((item) => collborationDataMapper(item));
+  const finalRes: Collaboration = collborationDataMapper(updatedUser);
+
+  return finalRes;
 };

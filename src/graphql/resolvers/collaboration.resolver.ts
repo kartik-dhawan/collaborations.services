@@ -3,6 +3,7 @@ import { Resolvers } from "../generated/graphql.ts";
 import {
   createNewCollaboration,
   fetchAllCollaborations,
+  updateCollaborationByID,
 } from "../actions/index.ts";
 
 /** QUERIES */
@@ -25,6 +26,17 @@ export const collabMutations: Resolvers["Mutation"] = {
     try {
       const createdCollaboration = await createNewCollaboration(payload);
       return createdCollaboration;
+    } catch (error) {
+      throw new GraphQLError(
+        error instanceof Error ? error.message : error.toString()
+      );
+    }
+  },
+
+  csEditCollaboration: async (_, { payload }) => {
+    try {
+      const updatedCollaboration = await updateCollaborationByID(payload);
+      return updatedCollaboration;
     } catch (error) {
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()
