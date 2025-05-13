@@ -18,7 +18,6 @@ export const clientQueries: Resolvers["Query"] = {
 export const clientMutations: Resolvers["Mutation"] = {
   csCreateClient: async (_, { payload }) => {
     try {
-      console.log({ payload });
       const createdClient = await createNewClient(payload);
       return createdClient;
     } catch (error) {
