@@ -81,21 +81,29 @@ export const createNewCollaboration = async (
       paymentDate: payload.paymentDate,
       paymentStatus: payload.paymentStatus,
       deliverableNotes: payload.deliverableNotes,
-      client: {
-        create: {
-          clientNotes: payload.clientPayload.clientNotes,
-          instagram: payload.clientPayload.instagram,
-          name: payload.clientPayload.name,
-          contactPeople: {
-            create: payload.clientPayload.clientContacts.map((contact) => ({
-              name: contact.name,
-              email: contact.email,
-              phone: contact.phone,
-              contactNotes: contact.clientNotes,
-            })),
+      // if there's already a clientId, we will connect to that client
+      // otherwise, we will create a new client
+      client: payload.clientId
+        ? {
+            connect: {
+              id: payload.clientId,
+            },
+          }
+        : {
+            create: {
+              clientNotes: payload.clientPayload.clientNotes,
+              instagram: payload.clientPayload.instagram,
+              name: payload.clientPayload.name,
+              contactPeople: {
+                create: payload.clientPayload.clientContacts.map((contact) => ({
+                  name: contact.name,
+                  email: contact.email,
+                  phone: contact.phone,
+                  contactNotes: contact.clientNotes,
+                })),
+              },
+            },
           },
-        },
-      },
     },
     include: {
       client: {

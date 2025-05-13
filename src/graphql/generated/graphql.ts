@@ -53,7 +53,8 @@ export type CreateClientPayload = {
 };
 
 export type CreateCollaborationPayload = {
-  clientPayload: CreateClientPayload;
+  clientId?: InputMaybe<Scalars['ID']['input']>;
+  clientPayload?: InputMaybe<CreateClientPayload>;
   collabNotes?: InputMaybe<Scalars['String']['input']>;
   collabStatus: CsCollabStatus;
   dealDate?: InputMaybe<Scalars['String']['input']>;
@@ -161,6 +162,7 @@ export type FetchUserPayload = {
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
+  csCreateClient: CsClientSummary;
   csCreateCollaboration: Collaboration;
   csEditCollaboration: Collaboration;
   deleteAUser: DeleteUserResponse;
@@ -170,6 +172,11 @@ export type Mutation = {
 
 export type MutationCreateUserArgs = {
   payload: CreateUserPayload;
+};
+
+
+export type MutationCsCreateClientArgs = {
+  payload: CreateClientPayload;
 };
 
 
@@ -199,6 +206,7 @@ export enum OrderBy {
 
 export type Query = {
   __typename?: 'Query';
+  csGetClients: Array<CsClientSummary>;
   csGetCollaborations: Array<Collaboration>;
   getAllUsers?: Maybe<Array<User>>;
   getUserById: User;
@@ -453,6 +461,7 @@ export type DeleteUserResponseResolvers<ContextType = any, ParentType extends Re
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'payload'>>;
+  csCreateClient?: Resolver<ResolversTypes['CsClientSummary'], ParentType, ContextType, RequireFields<MutationCsCreateClientArgs, 'payload'>>;
   csCreateCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, RequireFields<MutationCsCreateCollaborationArgs, 'payload'>>;
   csEditCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, Partial<MutationCsEditCollaborationArgs>>;
   deleteAUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteAUserArgs, 'id'>>;
@@ -460,6 +469,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  csGetClients?: Resolver<Array<ResolversTypes['CsClientSummary']>, ParentType, ContextType>;
   csGetCollaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
   getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;

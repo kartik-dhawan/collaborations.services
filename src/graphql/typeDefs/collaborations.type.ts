@@ -35,7 +35,8 @@ const collaborationsDef = gql`
     deliverableStatus: CsDeliverableStatus!
     deliverableNotes: String
     collabNotes: String
-    clientPayload: CreateClientPayload!
+    clientPayload: CreateClientPayload
+    clientId: ID
   }
 
   input UpdateCollaborationPayload {

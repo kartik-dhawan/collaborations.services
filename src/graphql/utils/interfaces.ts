@@ -13,3 +13,10 @@ export type CollaborationWithClientToGQL = Prisma.CollaborationsGetPayload<{
     };
   };
 }>;
+
+/** CLIENTS DATA INTERFACES */
+export type ClientsDataToGQL = Prisma.ClientDataGetPayload<{
+  include: {
+    contactPeople: true;
+  };
+}>;

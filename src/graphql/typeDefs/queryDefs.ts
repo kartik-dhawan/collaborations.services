@@ -8,6 +8,9 @@ const queryDefs = gql`
 
     # COLLABORATION queries
     csGetCollaborations: [Collaboration!]!
+
+    # CLIENT queries
+    csGetClients: [CsClientSummary!]!
   }
 `;
 
