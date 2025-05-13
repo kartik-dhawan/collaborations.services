@@ -127,7 +127,7 @@ export const deleteUser = async (
 
   if (deletedUser) {
     return {
-      message: responseMessages.USER.CREATION_SUCCESS,
+      message: responseMessages.USER.DELETION_SUCCESS,
       status: DeleteStatus.Success,
     };
   } else {
