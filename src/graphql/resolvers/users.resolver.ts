@@ -5,8 +5,10 @@ import {
   deleteUser,
   fetchAllUsers,
   fetchUserById,
+  generateNewUserToken,
   updateUserDetails,
 } from "../actions/index.ts";
+import { responseMessages } from "../utils/index.ts";
 
 /** QUERIES */
 export const userQueries: Resolvers["Query"] = {
@@ -61,6 +63,36 @@ export const userMutations: Resolvers["Mutation"] = {
     try {
       const response = await deleteUser(userId);
       return response;
+    } catch (error) {
+      throw new GraphQLError(
+        error instanceof Error ? error.message : error.toString()
+      );
+    }
+  },
+
+  umsSignUp: async (_, { payload }) => {
+    try {
+      // create a user
+      const createdUser = await createNewUser(payload);
+
+      // if a user is not created throw error
+      if (!createdUser) {
+        throw new GraphQLError(responseMessages.USER.CREATION_ERROR);
+      }
+
+      // if the user is created, generate a token for the user
+      // and return the user & token
+      const accessToken = generateNewUserToken(createdUser);
+
+      if (!accessToken) {
+        throw new GraphQLError(responseMessages.USER.SIGN_UP_FAILED);
+      }
+
+      return {
+        user: createdUser,
+        token: accessToken,
+        message: responseMessages.USER.CREATION_SUCCESS,
+      };
     } catch (error) {
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()

@@ -73,6 +73,7 @@ export type CreateCollaborationPayload = {
 export type CreateUserPayload = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
   role?: InputMaybe<UserRole>;
 };
 
@@ -166,6 +167,7 @@ export type Mutation = {
   csCreateCollaboration: Collaboration;
   csEditCollaboration: Collaboration;
   deleteAUser: DeleteUserResponse;
+  umsSignUp: SignInResponse;
   updateUser: User;
 };
 
@@ -195,6 +197,11 @@ export type MutationDeleteAUserArgs = {
 };
 
 
+export type MutationUmsSignUpArgs = {
+  payload: CreateUserPayload;
+};
+
+
 export type MutationUpdateUserArgs = {
   payload: UpdateUserPayload;
 };
@@ -220,6 +227,13 @@ export type QueryGetAllUsersArgs = {
 
 export type QueryGetUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type SignInResponse = {
+  __typename?: 'SignInResponse';
+  message?: Maybe<Scalars['String']['output']>;
+  token: Scalars['String']['output'];
+  user: User;
 };
 
 export type UpdateCollabClientPayload = {
@@ -376,6 +390,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   OrderBy: OrderBy;
   Query: ResolverTypeWrapper<{}>;
+  SignInResponse: ResolverTypeWrapper<SignInResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   UpdateCollabClientPayload: UpdateCollabClientPayload;
   UpdateCollaborationPayload: UpdateCollaborationPayload;
@@ -403,6 +418,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
+  SignInResponse: SignInResponse;
   String: Scalars['String']['output'];
   UpdateCollabClientPayload: UpdateCollabClientPayload;
   UpdateCollaborationPayload: UpdateCollaborationPayload;
@@ -465,6 +481,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   csCreateCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, RequireFields<MutationCsCreateCollaborationArgs, 'payload'>>;
   csEditCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, Partial<MutationCsEditCollaborationArgs>>;
   deleteAUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteAUserArgs, 'id'>>;
+  umsSignUp?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<MutationUmsSignUpArgs, 'payload'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };
 
@@ -473,6 +490,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   csGetCollaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
   getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
+};
+
+export type SignInResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignInResponse'] = ResolversParentTypes['SignInResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -492,6 +516,7 @@ export type Resolvers<ContextType = any> = {
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SignInResponse?: SignInResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

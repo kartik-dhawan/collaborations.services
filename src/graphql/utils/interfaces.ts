@@ -1,5 +1,11 @@
 import { Prisma } from "../../prisma/generated/index.js";
 
+/** COMMON INTERFACES */
+export type HmacHashObject = {
+  salt: string;
+  hash: string;
+};
+
 /** USER INTERFACES */
 export type UserPrismaToGQL = Prisma.UserGetPayload<{}>;
 

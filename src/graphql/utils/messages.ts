@@ -1,8 +1,13 @@
 export const responseMessages = {
   USER: {
-    CREATION_SUCCESS: "User created successfully",
-    DELETION_SUCCESS: "User deleted successfully",
-    CREATION_ERROR: "User creation failed",
+    CREATION_SUCCESS: "User created successfully.",
+    DELETION_SUCCESS: "User deleted successfully.",
+    CREATION_ERROR: "User creation failed.",
     NOT_FOUND: "User not found",
+    SIGN_UP_SUCCESS: "User created & signed up successfully.",
+    SIGN_UP_FAILED:
+      "User created but ran into an error while signing in. Please sign in again.",
+    SIGN_IN_FAILED: "Error signing in the user. Please sign in again.",
+    SIGN_IN_SUCCESS: "User is now logged in.",
   },
 };

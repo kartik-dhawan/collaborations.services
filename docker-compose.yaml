@@ -9,11 +9,11 @@ services: # services: is the top-level key under which you list each container y
             POSTGRES_PASSWORD: ${DB_PASS}
             POSTGRES_DB:       ${DB_NAME} # You’ll connect with these credentials in your DATABASE_URL
         networks:
-            - db-net
+            - db-net # all services which need to connect to each other to share resources must have same network
         volumes:
             - db-data:/var/lib/postgresql/data
     pgadmin:
-        image: dpage/pgadmin4:latest
+        image: dpage/pgadmin4:latest # pulls this image for pg admin - can be found in docker hub
         restart: always
         ports:
             - "8080:80"
@@ -23,7 +23,7 @@ services: # services: is the top-level key under which you list each container y
         volumes:
             - pgadmin-data:/var/lib/pgadmin
         networks:
-            - db-net
+            - db-net # same as that of DB, since pg-admin needs to connect to our postgres database
         depends_on:
             - db
 volumes:

@@ -9,10 +9,12 @@ import {
   UserRole,
 } from "../generated/graphql.ts";
 import {
+  generateHmacHash,
   graphQLToPrismaSortingLabels,
   responseMessages,
 } from "../utils/index.ts";
 import { UserPrismaToGQL } from "../utils/interfaces.ts";
+import jwt from "jsonwebtoken";
 
 // This is a mapper function to convert the Prisma data structure to the GraphQL data structure
 export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
@@ -101,12 +103,17 @@ export const updateUserDetails = async (
 };
 
 export const createNewUser = async (payload: CreateUserPayload) => {
+  // encrypt the password & store both its key & hashed password
+  const hashObject = generateHmacHash(payload.password);
+
   // create new user in db using prisma client
   const createdUser = await prisma.user.create({
     data: {
       email: payload.email, // required
       name: payload.name, // required
       role: payload.role, // default role auto handled in DB
+      passwordHash: hashObject.hash,
+      saltKey: hashObject.salt,
     },
   });
 
@@ -136,4 +143,11 @@ export const deleteUser = async (
       status: DeleteStatus.Failed,
     };
   }
+};
+
+export const generateNewUserToken = (user: User) => {
+  return jwt.sign(user, process.env.JWT_SECRET, {
+    algorithm: "HS256",
+    expiresIn: 60 * 60, // 1 hour
+  });
 };

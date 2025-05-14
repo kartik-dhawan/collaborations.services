@@ -6,7 +6,7 @@ import typeDefs from "./typeDefs/index.ts";
 import resolvers from "./resolvers/index.ts";
 import prisma from "../prisma/index.ts";
 
-dotenv.config(); // ✅ Classic way
+dotenv.config();
 
 const PORT = process.env.PORT || 3002; // Setting the port from environment variable or defaulting to 3002
 
