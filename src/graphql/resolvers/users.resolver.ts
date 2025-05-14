@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql";
-import { Resolvers, User } from "../generated/graphql.ts";
+import { Resolvers, SignInResponse, User } from "../generated/graphql.ts";
 import {
   createNewUser,
   deleteUser,
@@ -7,6 +7,7 @@ import {
   fetchUserById,
   generateNewUserToken,
   updateUserDetails,
+  userLoginHandler,
 } from "../actions/index.ts";
 import { responseMessages } from "../utils/index.ts";
 
@@ -27,6 +28,17 @@ export const userQueries: Resolvers["Query"] = {
     try {
       const user = await fetchUserById(userId);
       return user;
+    } catch (error) {
+      throw new GraphQLError(
+        error instanceof Error ? error.message : error.toString()
+      );
+    }
+  },
+
+  umsLogin: async (_, { payload }) => {
+    try {
+      const signInResponse: SignInResponse = await userLoginHandler(payload);
+      return signInResponse;
     } catch (error) {
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()

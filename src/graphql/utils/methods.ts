@@ -7,8 +7,11 @@ import { HmacHashObject } from "./interfaces.ts";
  * @param {string} str
  * @returns
  */
-export const generateHmacHash = (str: string): HmacHashObject => {
-  const salt = randomBytes(64).toString("hex");
+export const generateHmacHash = (
+  str: string,
+  inputSalt?: string
+): HmacHashObject => {
+  const salt = inputSalt ?? randomBytes(64).toString("hex");
   const hash = createHmac("sha256", salt).update(str).digest("hex");
 
   return {

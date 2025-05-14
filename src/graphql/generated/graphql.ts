@@ -217,6 +217,7 @@ export type Query = {
   csGetCollaborations: Array<Collaboration>;
   getAllUsers?: Maybe<Array<User>>;
   getUserById: User;
+  umsLogin: SignInResponse;
 };
 
 
@@ -227,6 +228,11 @@ export type QueryGetAllUsersArgs = {
 
 export type QueryGetUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type QueryUmsLoginArgs = {
+  payload: UserLoginPayload;
 };
 
 export type SignInResponse = {
@@ -275,6 +281,11 @@ export type User = {
   name: Scalars['String']['output'];
   role?: Maybe<UserRole>;
   updatedAt: Scalars['String']['output'];
+};
+
+export type UserLoginPayload = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export enum UserRole {
@@ -396,6 +407,7 @@ export type ResolversTypes = {
   UpdateCollaborationPayload: UpdateCollaborationPayload;
   UpdateUserPayload: UpdateUserPayload;
   User: ResolverTypeWrapper<User>;
+  UserLoginPayload: UserLoginPayload;
   UserRole: UserRole;
   UserSearch: UserSearch;
   UserSearchFields: UserSearchFields;
@@ -424,6 +436,7 @@ export type ResolversParentTypes = {
   UpdateCollaborationPayload: UpdateCollaborationPayload;
   UpdateUserPayload: UpdateUserPayload;
   User: User;
+  UserLoginPayload: UserLoginPayload;
   UserSearch: UserSearch;
   UserSorting: UserSorting;
 };
@@ -490,6 +503,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   csGetCollaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
   getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
+  umsLogin?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<QueryUmsLoginArgs, 'payload'>>;
 };
 
 export type SignInResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignInResponse'] = ResolversParentTypes['SignInResponse']> = {

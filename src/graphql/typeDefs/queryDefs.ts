@@ -5,6 +5,7 @@ const queryDefs = gql`
     # USER queries
     getAllUsers(payload: FetchUserPayload): [User!]
     getUserById(id: Int!): User!
+    umsLogin(payload: UserLoginPayload!): SignInResponse!
 
     # COLLABORATION queries
     csGetCollaborations: [Collaboration!]!

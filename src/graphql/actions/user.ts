@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import prisma from "../../prisma/index.ts";
 import {
   CreateUserPayload,
@@ -5,7 +6,9 @@ import {
   DeleteUserResponse,
   MutationUpdateUserArgs,
   QueryGetAllUsersArgs,
+  SignInResponse,
   User,
+  UserLoginPayload,
   UserRole,
 } from "../generated/graphql.ts";
 import {
@@ -13,7 +16,7 @@ import {
   graphQLToPrismaSortingLabels,
   responseMessages,
 } from "../utils/index.ts";
-import { UserPrismaToGQL } from "../utils/interfaces.ts";
+import { HmacHashObject, UserPrismaToGQL } from "../utils/interfaces.ts";
 import jwt from "jsonwebtoken";
 
 // This is a mapper function to convert the Prisma data structure to the GraphQL data structure
@@ -77,6 +80,32 @@ export const fetchUserById = async (userId: number) => {
   const finalRes: User = userDataMapperToGQL(user);
 
   return finalRes;
+};
+
+export const fetchUserByEmail = async (
+  email: string
+): Promise<{ user: User; passwordHash: HmacHashObject } | undefined> => {
+  // fetch a single user from DB by email
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    return undefined;
+  }
+
+  // map data from Prisma schema to graphql Schema
+  const finalRes: User = userDataMapperToGQL(user);
+
+  return {
+    passwordHash: {
+      salt: user.saltKey,
+      hash: user.passwordHash,
+    },
+    user: finalRes,
+  };
 };
 
 export const updateUserDetails = async (
@@ -150,4 +179,36 @@ export const generateNewUserToken = (user: User) => {
     algorithm: "HS256",
     expiresIn: 60 * 60, // 1 hour
   });
+};
+
+export const userLoginHandler = async (
+  payload: UserLoginPayload
+): Promise<SignInResponse> => {
+  /** Find user by entered email */
+  const { user, passwordHash: userPassword } =
+    (await fetchUserByEmail(payload.email)) ?? {};
+
+  /** if there is no user with that email, then throw error */
+  if (!user) {
+    throw new GraphQLError(responseMessages.USER.NOT_FOUND);
+  }
+
+  /** generate a new hash with the same key found from user in db */
+  const generatedPasswordHash = generateHmacHash(
+    payload.password,
+    userPassword.salt
+  );
+
+  /** if the new hash matches the hash in the db, then password is the same */
+  if (userPassword.hash !== generatedPasswordHash.hash) {
+    throw new GraphQLError(responseMessages.USER.INCORRECT_PASSWORD);
+  }
+
+  const accessToken = generateNewUserToken(user);
+
+  return {
+    user,
+    token: accessToken,
+    message: responseMessages.USER.SIGN_IN_SUCCESS,
+  };
 };

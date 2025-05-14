@@ -9,5 +9,7 @@ export const responseMessages = {
       "User created but ran into an error while signing in. Please sign in again.",
     SIGN_IN_FAILED: "Error signing in the user. Please sign in again.",
     SIGN_IN_SUCCESS: "User is now logged in.",
+    INCORRECT_PASSWORD:
+      "Incorrect password. Please check your credentials and try again.",
   },
 };

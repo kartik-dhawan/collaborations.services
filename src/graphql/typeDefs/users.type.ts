@@ -10,12 +10,6 @@ const userDefs = gql`
     updatedAt: String!
   }
 
-  type SignInResponse {
-    token: String!
-    user: User!
-    message: String
-  }
-
   enum UserRole {
     USER
     ADMIN
@@ -53,6 +47,17 @@ const userDefs = gql`
     name: String!
     password: String!
     role: UserRole
+  }
+
+  input UserLoginPayload {
+    email: String!
+    password: String!
+  }
+
+  type SignInResponse {
+    token: String!
+    user: User!
+    message: String
   }
 
   type DeleteUserResponse {
