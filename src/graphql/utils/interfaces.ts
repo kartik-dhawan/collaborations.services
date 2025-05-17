@@ -1,15 +1,24 @@
-import { Prisma } from "../../prisma/generated/index.js";
+import { JwtPayload } from "jsonwebtoken";
+import { Prisma, User } from "../../prisma/generated/index.js";
+import { Resolvers } from "../generated/graphql.ts";
 
-/** COMMON INTERFACES */
+/** =========== COMMON INTERFACES ================================================================================================ */
 export type HmacHashObject = {
   salt: string;
   hash: string;
 };
 
-/** USER INTERFACES */
+export type QueryMutationKeys = keyof (Resolvers["Query"] &
+  Resolvers["Mutation"]);
+
+/** ===========USER INTERFACES ================================================================================================== */
 export type UserPrismaToGQL = Prisma.UserGetPayload<{}>;
 
-/** COLLABORATION INTERFACES */
+export type JwtUser = User & JwtPayload;
+
+export type MyAuthCtx = { user?: JwtUser };
+
+/** =========== COLLABORATION INTERFACES ======================================================================================== */
 export type CollaborationWithClientToGQL = Prisma.CollaborationsGetPayload<{
   include: {
     client: {
@@ -20,7 +29,7 @@ export type CollaborationWithClientToGQL = Prisma.CollaborationsGetPayload<{
   };
 }>;
 
-/** CLIENTS DATA INTERFACES */
+/** =========== CLIENTS DATA INTERFACES  ======================================================================================== */
 export type ClientsDataToGQL = Prisma.ClientDataGetPayload<{
   include: {
     contactPeople: true;

@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import typeDefs from "./typeDefs/index.ts";
 import resolvers from "./resolvers/index.ts";
 import prisma from "../prisma/index.ts";
+import { protectedRoutesPlugin } from "./protected.ts";
+import { JwtUser } from "./utils/interfaces.ts";
+import { verifyJwtAndAuthenticate } from "./actions/index.ts";
 
 dotenv.config();
 
@@ -21,6 +24,7 @@ const startServer = async () => {
   const server = new ApolloServer({
     typeDefs: typeDefs,
     resolvers: resolvers,
+    plugins: [protectedRoutesPlugin],
   });
 
   try {
@@ -31,8 +35,15 @@ const startServer = async () => {
     app.use(
       "/graphql",
       expressMiddleware(server, {
-        context: async ({ req, res }) => {
-          return { req, res }; // Returning the request and response objects in the context
+        context: async (params) => {
+          const { req, res } = params;
+
+          const authToken = req.headers.authorization;
+          const user: JwtUser | undefined = await verifyJwtAndAuthenticate(
+            authToken
+          ); // verify the token & return the data from it if present
+
+          return { req, res, user }; // Returning the request, response & user objects in the context
         },
       })
     );

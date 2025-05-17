@@ -11,5 +11,7 @@ export const responseMessages = {
     SIGN_IN_SUCCESS: "User is now logged in.",
     INCORRECT_PASSWORD:
       "Incorrect password. Please check your credentials and try again.",
+    USER_NOT_AUTHENTICATED:
+      "The user is not authenticated. Please login & try again.",
   },
 };

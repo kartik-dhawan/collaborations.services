@@ -16,7 +16,11 @@ import {
   graphQLToPrismaSortingLabels,
   responseMessages,
 } from "../utils/index.ts";
-import { HmacHashObject, UserPrismaToGQL } from "../utils/interfaces.ts";
+import {
+  HmacHashObject,
+  JwtUser,
+  UserPrismaToGQL,
+} from "../utils/interfaces.ts";
 import jwt from "jsonwebtoken";
 
 // This is a mapper function to convert the Prisma data structure to the GraphQL data structure
@@ -211,4 +215,20 @@ export const userLoginHandler = async (
     token: accessToken,
     message: responseMessages.USER.SIGN_IN_SUCCESS,
   };
+};
+
+export const verifyJwtAndAuthenticate = async (
+  authToken?: string
+): Promise<JwtUser | undefined> => {
+  let user: JwtUser = undefined;
+
+  if (authToken) {
+    try {
+      user = jwt.verify(authToken, process.env.JWT_SECRET) as JwtUser;
+    } catch {
+      user = undefined;
+    }
+  }
+
+  return user;
 };
