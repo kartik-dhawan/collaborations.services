@@ -29,9 +29,10 @@ export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
     email: data.email,
     id: data.id,
     name: data.name,
-    role: data.role as UserRole,
+    role: data.roleData.roleEnum as UserRole,
     createdAt: data.createdAt.toISOString(),
     updatedAt: data.updatedAt.toISOString(),
+    permissions: data.roleData.permissions.map((it) => it.permissionName),
   };
 };
 
@@ -58,15 +59,23 @@ export const fetchAllUsers = async (
               graphQLToPrismaSortingLabels[payload.sort.value],
           }
         : {},
+      include: {
+        roleData: {
+          include: {
+            permissions: true,
+          },
+        },
+      },
     }
   );
 
   // map data from Prisma schema to graphql Schema
   const finalRes: User[] = users.map((it) => ({
     ...it,
-    role: it.role as UserRole,
+    role: it.roleData.roleEnum as UserRole,
     createdAt: it.createdAt.toISOString(),
     updatedAt: it.updatedAt.toISOString(),
+    permissions: it.roleData.permissions.map((perm) => perm.permissionName),
   }));
 
   return finalRes;
@@ -77,6 +86,13 @@ export const fetchUserById = async (userId: number) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
+    },
+    include: {
+      roleData: {
+        include: {
+          permissions: true,
+        },
+      },
     },
   });
 
@@ -93,6 +109,13 @@ export const fetchUserByEmail = async (
   const user = await prisma.user.findUnique({
     where: {
       email,
+    },
+    include: {
+      roleData: {
+        include: {
+          permissions: true,
+        },
+      },
     },
   });
 
@@ -125,7 +148,18 @@ export const updateUserDetails = async (
     data: {
       email: payload.email,
       name: payload.name,
-      role: payload.role,
+      roleData: {
+        connect: {
+          roleEnum: payload.role,
+        },
+      },
+    },
+    include: {
+      roleData: {
+        include: {
+          permissions: true,
+        },
+      },
     },
   });
 
@@ -144,9 +178,20 @@ export const createNewUser = async (payload: CreateUserPayload) => {
     data: {
       email: payload.email, // required
       name: payload.name, // required
-      role: payload.role, // default role auto handled in DB
       passwordHash: hashObject.hash,
       saltKey: hashObject.salt,
+      roleData: {
+        connect: {
+          roleEnum: payload.role,
+        },
+      },
+    },
+    include: {
+      roleData: {
+        include: {
+          permissions: true,
+        },
+      },
     },
   });
 

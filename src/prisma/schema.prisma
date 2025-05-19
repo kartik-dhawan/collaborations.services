@@ -18,11 +18,26 @@ model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
   name         String
-  role         Role      @default(USER)
+  roleId       String
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
   passwordHash String
   saltKey      String
+  roleData     Role      @relation("roleForUser", fields: [roleId], references: [id])
+}
+
+model Role {
+  id          String        @id @default(uuid())
+  roleName    String
+  roleEnum    String        @unique
+  users       User[]        @relation("roleForUser")
+  permissions Permissions[] @relation("rolePermissions")
+}
+
+model Permissions {
+  id             String @id @default(uuid())
+  permissionName String @unique
+  roles          Role[] @relation("rolePermissions")
 }
 
 model ClientData {
@@ -66,11 +81,6 @@ model Collaborations {
   deliverableStatus DeliverableStatus           @default(IN_REVIEW)
   deliverableNotes  String?
   collabNotes       String?
-}
-
-enum Role {
-  USER
-  ADMIN
 }
 
 enum CsGender {

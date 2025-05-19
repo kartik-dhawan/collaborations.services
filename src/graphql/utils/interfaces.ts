@@ -12,7 +12,15 @@ export type QueryMutationKeys = keyof (Resolvers["Query"] &
   Resolvers["Mutation"]);
 
 /** ===========USER INTERFACES ================================================================================================== */
-export type UserPrismaToGQL = Prisma.UserGetPayload<{}>;
+export type UserPrismaToGQL = Prisma.UserGetPayload<{
+  include: {
+    roleData: {
+      include: {
+        permissions: true;
+      };
+    };
+  };
+}>;
 
 export type JwtUser = User & JwtPayload;
 

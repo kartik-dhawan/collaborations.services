@@ -8,6 +8,7 @@ const userDefs = gql`
     role: UserRole
     createdAt: String!
     updatedAt: String!
+    permissions: [String!]!
   }
 
   enum UserRole {
