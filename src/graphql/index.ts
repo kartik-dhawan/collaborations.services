@@ -2,10 +2,8 @@ import express from "express"; // Importing the express framework for building t
 import { ApolloServer } from "@apollo/server"; // Importing ApolloServer for GraphQL server functionality
 import { expressMiddleware } from "@apollo/server/express4"; // Importing expressMiddleware to integrate Apollo with Express
 import dotenv from "dotenv";
-import typeDefs from "./typeDefs/index.ts";
-import resolvers from "./resolvers/index.ts";
 import prisma from "../prisma/index.ts";
-import { protectedRoutesPlugin } from "./protected.ts";
+import { getProtectedSchema, protectedRoutesPlugin } from "./protected.ts";
 import { JwtUser } from "./utils/interfaces.ts";
 import { verifyJwtAndAuthenticate } from "./actions/index.ts";
 
@@ -20,10 +18,12 @@ const startServer = async () => {
   // Middleware to parse JSON request bodies
   app.use(express.json());
 
+  // schema (typedefs with protection of permissions)
+  const protectedSchema = getProtectedSchema();
+
   // Creating a new Apollo Server instance with type definitions and resolvers
   const server = new ApolloServer({
-    typeDefs: typeDefs,
-    resolvers: resolvers,
+    schema: protectedSchema,
     plugins: [protectedRoutesPlugin],
   });
 

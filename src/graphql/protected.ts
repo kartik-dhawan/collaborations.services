@@ -7,6 +7,11 @@ import {
 import { GraphQLError } from "graphql";
 import { QueryMutationKeys, MyAuthCtx } from "./utils/interfaces.ts";
 import { responseMessages } from "./utils/messages.ts";
+import { applyMiddleware } from "graphql-middleware";
+import resolvers from "./resolvers/index.ts";
+import typeDefs from "./typeDefs/index.ts";
+import { GraphQLSchemaWithFragmentReplacements } from "graphql-middleware/types";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 
 export const WHITE_LIST: QueryMutationKeys[] = ["umsLogin", "umsSignUp"];
 
@@ -67,4 +72,21 @@ export const protectedRoutesPlugin: ApolloServerPlugin<MyAuthCtx> = {
       },
     };
   },
+};
+
+/**
+ *  a function which takes typeDefs & resolvers, converts them into a schema
+ *
+ *  later returns that schema with added permissions for authorization & authentication
+ *
+ * @returns {GraphQLSchemaWithFragmentReplacements}
+ */
+export const getProtectedSchema = (): GraphQLSchemaWithFragmentReplacements => {
+  /* 1. Create executable schema */
+  const rawSchema = makeExecutableSchema({ typeDefs, resolvers });
+
+  /* 2. Wrap with shield */
+  const schema = applyMiddleware(rawSchema, {} /** permissions */);
+
+  return schema;
 };

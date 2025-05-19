@@ -18,10 +18,13 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.12.0",
+    "@graphql-tools/schema": "^10.0.23",
     "@prisma/client": "^6.7.0",
     "dotenv": "^16.5.0",
     "firebase": "^11.7.1",
     "graphql": "^16.11.0",
+    "graphql-middleware": "^6.1.35",
+    "graphql-shield": "^7.6.5",
     "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
     "uuid": "^11.1.0"
