@@ -211,12 +211,32 @@ export enum OrderBy {
   Desc = 'DESC'
 }
 
+export enum PermissionValue {
+  CreateClient = 'CREATE_CLIENT',
+  CreateCollaboration = 'CREATE_COLLABORATION',
+  CreateNewUser = 'CREATE_NEW_USER',
+  DeleteAUser = 'DELETE_A_USER',
+  EditCollaboration = 'EDIT_COLLABORATION',
+  ReadClientData = 'READ_CLIENT_DATA',
+  ReadCollaboraionsData = 'READ_COLLABORAIONS_DATA',
+  ReadUserData = 'READ_USER_DATA',
+  UpdateUser = 'UPDATE_USER'
+}
+
+export type PermissionsResponse = {
+  __typename?: 'PermissionsResponse';
+  permissions: Array<PermissionValue>;
+  role?: Maybe<UserRole>;
+  totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   csGetClients: Array<CsClientSummary>;
   csGetCollaborations: Array<Collaboration>;
   getAllUsers?: Maybe<Array<User>>;
   getUserById: User;
+  umsGetUserPermissions: PermissionsResponse;
   umsLogin: SignInResponse;
 };
 
@@ -228,6 +248,11 @@ export type QueryGetAllUsersArgs = {
 
 export type QueryGetUserByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type QueryUmsGetUserPermissionsArgs = {
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -279,7 +304,7 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
-  permissions: Array<Scalars['String']['output']>;
+  permissions: Array<PermissionValue>;
   role?: Maybe<UserRole>;
   updatedAt: Scalars['String']['output'];
 };
@@ -401,6 +426,8 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OrderBy: OrderBy;
+  PermissionValue: PermissionValue;
+  PermissionsResponse: ResolverTypeWrapper<PermissionsResponse>;
   Query: ResolverTypeWrapper<{}>;
   SignInResponse: ResolverTypeWrapper<SignInResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -430,6 +457,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
+  PermissionsResponse: PermissionsResponse;
   Query: {};
   SignInResponse: SignInResponse;
   String: Scalars['String']['output'];
@@ -499,11 +527,19 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };
 
+export type PermissionsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionsResponse'] = ResolversParentTypes['PermissionsResponse']> = {
+  permissions?: Resolver<Array<ResolversTypes['PermissionValue']>, ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType>;
+  totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   csGetClients?: Resolver<Array<ResolversTypes['CsClientSummary']>, ParentType, ContextType>;
   csGetCollaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
   getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
+  umsGetUserPermissions?: Resolver<ResolversTypes['PermissionsResponse'], ParentType, ContextType, RequireFields<QueryUmsGetUserPermissionsArgs, 'userId'>>;
   umsLogin?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<QueryUmsLoginArgs, 'payload'>>;
 };
 
@@ -519,7 +555,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  permissions?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  permissions?: Resolver<Array<ResolversTypes['PermissionValue']>, ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -531,6 +567,7 @@ export type Resolvers<ContextType = any> = {
   CsClientSummary?: CsClientSummaryResolvers<ContextType>;
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PermissionsResponse?: PermissionsResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInResponse?: SignInResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

@@ -5,6 +5,8 @@ import {
   DeleteStatus,
   DeleteUserResponse,
   MutationUpdateUserArgs,
+  PermissionsResponse,
+  PermissionValue,
   QueryGetAllUsersArgs,
   SignInResponse,
   User,
@@ -32,7 +34,9 @@ export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
     role: data.roleData.roleEnum as UserRole,
     createdAt: data.createdAt.toISOString(),
     updatedAt: data.updatedAt.toISOString(),
-    permissions: data.roleData.permissions.map((it) => it.permissionName),
+    permissions: data.roleData.permissions.map(
+      (it) => it.permissionName
+    ) as PermissionValue[],
   };
 };
 
@@ -75,7 +79,9 @@ export const fetchAllUsers = async (
     role: it.roleData.roleEnum as UserRole,
     createdAt: it.createdAt.toISOString(),
     updatedAt: it.updatedAt.toISOString(),
-    permissions: it.roleData.permissions.map((perm) => perm.permissionName),
+    permissions: it.roleData.permissions.map(
+      (perm) => perm.permissionName
+    ) as PermissionValue[],
   }));
 
   return finalRes;
@@ -276,4 +282,34 @@ export const verifyJwtAndAuthenticate = async (
   }
 
   return user;
+};
+
+export const getPermissionsByUserId = async (
+  userId: number
+): Promise<PermissionsResponse> => {
+  const permissions = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    include: {
+      roleData: {
+        include: {
+          permissions: {
+            select: {
+              permissionName: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return {
+    permissions:
+      (permissions.roleData.permissions.map(
+        (it) => it.permissionName
+      ) as PermissionValue[]) ?? [],
+    role: permissions.roleData.roleEnum as UserRole,
+    totalCount: permissions.roleData.permissions.length,
+  };
 };

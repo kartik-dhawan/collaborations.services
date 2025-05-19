@@ -8,7 +8,7 @@ const userDefs = gql`
     role: UserRole
     createdAt: String!
     updatedAt: String!
-    permissions: [String!]!
+    permissions: [PermissionValue!]!
   }
 
   enum UserRole {
@@ -64,6 +64,24 @@ const userDefs = gql`
   type DeleteUserResponse {
     status: DeleteStatus!
     message: String!
+  }
+
+  type PermissionsResponse {
+    permissions: [PermissionValue!]!
+    totalCount: Int
+    role: UserRole
+  }
+
+  enum PermissionValue {
+    CREATE_NEW_USER
+    READ_USER_DATA
+    UPDATE_USER
+    DELETE_A_USER
+    CREATE_COLLABORATION
+    READ_COLLABORAIONS_DATA
+    EDIT_COLLABORATION
+    CREATE_CLIENT
+    READ_CLIENT_DATA
   }
 `;
 

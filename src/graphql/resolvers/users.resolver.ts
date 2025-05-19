@@ -6,6 +6,7 @@ import {
   fetchAllUsers,
   fetchUserById,
   generateNewUserToken,
+  getPermissionsByUserId,
   updateUserDetails,
   userLoginHandler,
 } from "../actions/index.ts";
@@ -39,6 +40,17 @@ export const userQueries: Resolvers["Query"] = {
     try {
       const signInResponse: SignInResponse = await userLoginHandler(payload);
       return signInResponse;
+    } catch (error) {
+      throw new GraphQLError(
+        error instanceof Error ? error.message : error.toString()
+      );
+    }
+  },
+
+  umsGetUserPermissions: async (_, { userId }) => {
+    try {
+      const permissions = await getPermissionsByUserId(userId);
+      return permissions;
     } catch (error) {
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()
