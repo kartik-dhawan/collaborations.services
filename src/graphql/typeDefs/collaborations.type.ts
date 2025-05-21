@@ -19,6 +19,7 @@ const collaborationsDef = gql`
     deliverableStatus: CsDeliverableStatus!
     deliverableNotes: String
     collabNotes: String
+    user: UserProfile
   }
 
   input CreateCollaborationPayload {

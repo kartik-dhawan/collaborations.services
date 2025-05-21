@@ -1,6 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
-import { Prisma, User } from "../../prisma/generated/index.js";
-import { Resolvers } from "../generated/graphql.ts";
+import { Prisma } from "../../prisma/generated/index.js";
+import { Resolvers, User } from "../generated/graphql.ts";
+import { ExpressContextFunctionArgument } from "@apollo/server/express4";
 
 /** =========== COMMON INTERFACES ================================================================================================ */
 export type HmacHashObject = {
@@ -10,6 +11,10 @@ export type HmacHashObject = {
 
 export type QueryMutationKeys = keyof (Resolvers["Query"] &
   Resolvers["Mutation"]);
+
+export type GraphqlCustomContextType = ExpressContextFunctionArgument & {
+  user: User;
+};
 
 /** ===========USER INTERFACES ================================================================================================== */
 export type UserPrismaToGQL = Prisma.UserGetPayload<{
@@ -34,6 +39,7 @@ export type CollaborationWithClientToGQL = Prisma.CollaborationsGetPayload<{
         contactPeople: true;
       };
     };
+    user: true;
   };
 }>;
 
@@ -41,5 +47,6 @@ export type CollaborationWithClientToGQL = Prisma.CollaborationsGetPayload<{
 export type ClientsDataToGQL = Prisma.ClientDataGetPayload<{
   include: {
     contactPeople: true;
+    user: true;
   };
 }>;

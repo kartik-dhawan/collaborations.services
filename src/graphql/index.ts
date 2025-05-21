@@ -25,6 +25,12 @@ const startServer = async () => {
   const server = new ApolloServer({
     schema: protectedSchema,
     plugins: [protectedRoutesPlugin],
+    formatError: (err) => {
+      return {
+        message: err.message,
+        path: err.path,
+      };
+    },
   });
 
   try {

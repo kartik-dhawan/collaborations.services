@@ -1,6 +1,13 @@
 import { gql } from "graphql-tag";
 
 const userDefs = gql`
+  type UserProfile {
+    id: Int!
+    email: String!
+    name: String!
+    role: UserRole
+  }
+
   type User {
     id: Int!
     email: String!

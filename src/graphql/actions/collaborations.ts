@@ -8,6 +8,7 @@ import {
   CsDeliverableStatus,
   CsPaymentStatus,
   UpdateCollaborationPayload,
+  User,
 } from "../generated/graphql.ts";
 import { CollaborationWithClientToGQL } from "../utils/interfaces.ts";
 
@@ -47,6 +48,7 @@ const collborationDataMapper = (
         clientNotes: contact.contactNotes,
       })) ?? [],
   },
+  user: data.user,
 });
 
 export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
@@ -57,6 +59,7 @@ export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
           contactPeople: true,
         },
       },
+      user: true,
     },
   });
 
@@ -64,7 +67,8 @@ export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
 };
 
 export const createNewCollaboration = async (
-  payload: CreateCollaborationPayload
+  payload: CreateCollaborationPayload,
+  user: User
 ) => {
   const createdCollab = await prisma.collaborations.create({
     data: {
@@ -81,6 +85,11 @@ export const createNewCollaboration = async (
       paymentDate: payload.paymentDate,
       paymentStatus: payload.paymentStatus,
       deliverableNotes: payload.deliverableNotes,
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
       // if there's already a clientId, we will connect to that client
       // otherwise, we will create a new client
       client: payload.clientId
@@ -100,7 +109,17 @@ export const createNewCollaboration = async (
                   email: contact.email,
                   phone: contact.phone,
                   contactNotes: contact.clientNotes,
+                  user: {
+                    connect: {
+                      id: user.id,
+                    },
+                  },
                 })),
+              },
+              user: {
+                connect: {
+                  id: user.id,
+                },
               },
             },
           },
@@ -111,6 +130,7 @@ export const createNewCollaboration = async (
           contactPeople: true,
         },
       },
+      user: true,
     },
   });
 
@@ -158,6 +178,7 @@ export const updateCollaborationByID = async (
           contactPeople: true,
         },
       },
+      user: true,
     },
   });
 

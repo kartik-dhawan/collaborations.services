@@ -35,6 +35,7 @@ export type Collaboration = {
   paymentStatus: CsPaymentStatus;
   type: CsCollabType;
   updatedAt?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<UserProfile>;
 };
 
 export type CreateClientContactPayload = {
@@ -85,6 +86,7 @@ export type CsClientContactDetails = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   phone?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<UserProfile>;
 };
 
 export type CsClientSummary = {
@@ -95,6 +97,7 @@ export type CsClientSummary = {
   id: Scalars['ID']['output'];
   instagram?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  user?: Maybe<UserProfile>;
 };
 
 export enum CsCollabDeliverables {
@@ -314,6 +317,14 @@ export type UserLoginPayload = {
   password: Scalars['String']['input'];
 };
 
+export type UserProfile = {
+  __typename?: 'UserProfile';
+  email: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  role?: Maybe<UserRole>;
+};
+
 export enum UserRole {
   Admin = 'ADMIN',
   User = 'USER'
@@ -436,6 +447,7 @@ export type ResolversTypes = {
   UpdateUserPayload: UpdateUserPayload;
   User: ResolverTypeWrapper<User>;
   UserLoginPayload: UserLoginPayload;
+  UserProfile: ResolverTypeWrapper<UserProfile>;
   UserRole: UserRole;
   UserSearch: UserSearch;
   UserSearchFields: UserSearchFields;
@@ -466,6 +478,7 @@ export type ResolversParentTypes = {
   UpdateUserPayload: UpdateUserPayload;
   User: User;
   UserLoginPayload: UserLoginPayload;
+  UserProfile: UserProfile;
   UserSearch: UserSearch;
   UserSorting: UserSorting;
 };
@@ -488,6 +501,7 @@ export type CollaborationResolvers<ContextType = any, ParentType extends Resolve
   paymentStatus?: Resolver<ResolversTypes['CsPaymentStatus'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['CsCollabType'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -498,6 +512,7 @@ export type CsClientContactDetailsResolvers<ContextType = any, ParentType extend
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -508,6 +523,7 @@ export type CsClientSummaryResolvers<ContextType = any, ParentType extends Resol
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   instagram?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -561,6 +577,14 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserProfile'] = ResolversParentTypes['UserProfile']> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Collaboration?: CollaborationResolvers<ContextType>;
   CsClientContactDetails?: CsClientContactDetailsResolvers<ContextType>;
@@ -571,5 +595,6 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   SignInResponse?: SignInResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserProfile?: UserProfileResolvers<ContextType>;
 };
 

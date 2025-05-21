@@ -5,9 +5,10 @@ import {
   fetchAllCollaborations,
   updateCollaborationByID,
 } from "../actions/index.ts";
+import { GraphqlCustomContextType } from "../utils/index.ts";
 
 /** QUERIES */
-export const collabQueries: Resolvers["Query"] = {
+export const collabQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
   csGetCollaborations: async () => {
     try {
       const collaborations = await fetchAllCollaborations();
@@ -21,26 +22,33 @@ export const collabQueries: Resolvers["Query"] = {
 };
 
 /** MUTATIONS */
-export const collabMutations: Resolvers["Mutation"] = {
-  csCreateCollaboration: async (_, { payload }) => {
-    try {
-      const createdCollaboration = await createNewCollaboration(payload);
-      return createdCollaboration;
-    } catch (error) {
-      throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
-      );
-    }
-  },
+export const collabMutations: Resolvers<GraphqlCustomContextType>["Mutation"] =
+  {
+    csCreateCollaboration: async (_, { payload }, context) => {
+      // use logged in user's data from context to store userId in other tables
+      const userContext = context.user;
 
-  csEditCollaboration: async (_, { payload }) => {
-    try {
-      const updatedCollaboration = await updateCollaborationByID(payload);
-      return updatedCollaboration;
-    } catch (error) {
-      throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
-      );
-    }
-  },
-};
+      try {
+        const createdCollaboration = await createNewCollaboration(
+          payload,
+          userContext
+        );
+        return createdCollaboration;
+      } catch (error) {
+        throw new GraphQLError(
+          error instanceof Error ? error.message : error.toString()
+        );
+      }
+    },
+
+    csEditCollaboration: async (_, { payload }) => {
+      try {
+        const updatedCollaboration = await updateCollaborationByID(payload);
+        return updatedCollaboration;
+      } catch (error) {
+        throw new GraphQLError(
+          error instanceof Error ? error.message : error.toString()
+        );
+      }
+    },
+  };
