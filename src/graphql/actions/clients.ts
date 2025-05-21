@@ -27,7 +27,9 @@ export const clientsDataMapperToGQL = (
     })) ?? [],
 });
 
-export const fetchAllClients = async (): Promise<CsClientSummary[]> => {
+export const fetchAllClients = async (
+  user: User
+): Promise<CsClientSummary[]> => {
   const clients = await prisma.clientData.findMany({
     include: {
       contactPeople: true,
@@ -35,9 +37,10 @@ export const fetchAllClients = async (): Promise<CsClientSummary[]> => {
     },
   });
 
-  const finalRes: CsClientSummary[] = clients.map((item) =>
-    clientsDataMapperToGQL(item)
-  );
+  const finalRes: CsClientSummary[] = clients.map((item) => ({
+    ...clientsDataMapperToGQL(item),
+    isMine: user.id === item.userId,
+  }));
 
   return finalRes;
 };

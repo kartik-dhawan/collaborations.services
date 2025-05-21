@@ -4,9 +4,11 @@ import { Resolvers } from "../generated/graphql.ts";
 import { GraphqlCustomContextType } from "../utils/interfaces.ts";
 
 export const clientQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
-  csGetClients: async () => {
+  csGetClients: async (_, __, context) => {
+    const userContext = context.user;
+
     try {
-      const clientsData = await fetchAllClients();
+      const clientsData = await fetchAllClients(userContext);
       return clientsData;
     } catch (error) {
       throw new GraphQLError(

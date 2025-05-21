@@ -20,6 +20,7 @@ const collaborationsDef = gql`
     deliverableNotes: String
     collabNotes: String
     user: UserProfile
+    isMine: Boolean
   }
 
   input CreateCollaborationPayload {

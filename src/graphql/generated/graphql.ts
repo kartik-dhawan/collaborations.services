@@ -29,6 +29,7 @@ export type Collaboration = {
   deliverableStatus: CsDeliverableStatus;
   deliverables: Array<CsCollabDeliverables>;
   id: Scalars['ID']['output'];
+  isMine?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   paymentAmount?: Maybe<Scalars['Int']['output']>;
   paymentDate?: Maybe<Scalars['String']['output']>;
@@ -84,6 +85,7 @@ export type CsClientContactDetails = {
   createdAt: Scalars['String']['output'];
   email?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  isMine?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   phone?: Maybe<Scalars['String']['output']>;
   user?: Maybe<UserProfile>;
@@ -96,6 +98,7 @@ export type CsClientSummary = {
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   instagram?: Maybe<Scalars['String']['output']>;
+  isMine?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   user?: Maybe<UserProfile>;
 };
@@ -495,6 +498,7 @@ export type CollaborationResolvers<ContextType = any, ParentType extends Resolve
   deliverableStatus?: Resolver<ResolversTypes['CsDeliverableStatus'], ParentType, ContextType>;
   deliverables?: Resolver<Array<ResolversTypes['CsCollabDeliverables']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isMine?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   paymentAmount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   paymentDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -510,6 +514,7 @@ export type CsClientContactDetailsResolvers<ContextType = any, ParentType extend
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isMine?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>;
@@ -522,6 +527,7 @@ export type CsClientSummaryResolvers<ContextType = any, ParentType extends Resol
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   instagram?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isMine?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

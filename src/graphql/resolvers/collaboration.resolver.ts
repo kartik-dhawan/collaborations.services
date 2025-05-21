@@ -9,9 +9,11 @@ import { GraphqlCustomContextType } from "../utils/index.ts";
 
 /** QUERIES */
 export const collabQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
-  csGetCollaborations: async () => {
+  csGetCollaborations: async (_, __, context) => {
+    const userContext = context.user;
+
     try {
-      const collaborations = await fetchAllCollaborations();
+      const collaborations = await fetchAllCollaborations(userContext);
       return collaborations;
     } catch (error) {
       throw new GraphQLError(

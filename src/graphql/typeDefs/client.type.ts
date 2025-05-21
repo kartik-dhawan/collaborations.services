@@ -9,6 +9,7 @@ const clientDefs = gql`
     clientContacts: [CsClientContactDetails!]!
     clientNotes: String
     user: UserProfile
+    isMine: Boolean
   }
 
   type CsClientContactDetails {
@@ -19,6 +20,7 @@ const clientDefs = gql`
     createdAt: String!
     clientNotes: String
     user: UserProfile
+    isMine: Boolean
   }
 
   input CreateClientContactPayload {

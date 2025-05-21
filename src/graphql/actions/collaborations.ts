@@ -51,7 +51,9 @@ const collborationDataMapper = (
   user: data.user,
 });
 
-export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
+export const fetchAllCollaborations = async (
+  user: User
+): Promise<Collaboration[]> => {
   const collabs = prisma.collaborations.findMany({
     include: {
       client: {
@@ -63,7 +65,10 @@ export const fetchAllCollaborations = async (): Promise<Collaboration[]> => {
     },
   });
 
-  return (await collabs).map((item) => collborationDataMapper(item));
+  return (await collabs).map((item) => ({
+    ...collborationDataMapper(item),
+    isMine: user.id === item.userId,
+  }));
 };
 
 export const createNewCollaboration = async (
