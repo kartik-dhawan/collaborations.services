@@ -84,11 +84,17 @@ const userDefs = gql`
     READ_USER_DATA
     UPDATE_USER
     DELETE_A_USER
+    ASSIGN_PERMISSIONS
     CREATE_COLLABORATION
     READ_COLLABORAIONS_DATA
     EDIT_COLLABORATION
     CREATE_CLIENT
     READ_CLIENT_DATA
+  }
+
+  input AssignPermissionsPayload {
+    permissions: [PermissionValue!]!
+    role: UserRole
   }
 `;
 

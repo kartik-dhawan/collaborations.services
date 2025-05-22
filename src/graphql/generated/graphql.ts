@@ -16,6 +16,11 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type AssignPermissionsPayload = {
+  permissions: Array<PermissionValue>;
+  role?: InputMaybe<UserRole>;
+};
+
 export type Collaboration = {
   __typename?: 'Collaboration';
   client: CsClientSummary;
@@ -173,6 +178,7 @@ export type Mutation = {
   csCreateCollaboration: Collaboration;
   csEditCollaboration: Collaboration;
   deleteAUser: DeleteUserResponse;
+  umsAssignPermissionsToRole: PermissionsResponse;
   umsSignUp: SignInResponse;
   updateUser: User;
 };
@@ -203,6 +209,11 @@ export type MutationDeleteAUserArgs = {
 };
 
 
+export type MutationUmsAssignPermissionsToRoleArgs = {
+  payload: AssignPermissionsPayload;
+};
+
+
 export type MutationUmsSignUpArgs = {
   payload: CreateUserPayload;
 };
@@ -218,6 +229,7 @@ export enum OrderBy {
 }
 
 export enum PermissionValue {
+  AssignPermissions = 'ASSIGN_PERMISSIONS',
   CreateClient = 'CREATE_CLIENT',
   CreateCollaboration = 'CREATE_COLLABORATION',
   CreateNewUser = 'CREATE_NEW_USER',
@@ -419,6 +431,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AssignPermissionsPayload: AssignPermissionsPayload;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Collaboration: ResolverTypeWrapper<Collaboration>;
   CreateClientContactPayload: CreateClientContactPayload;
@@ -459,6 +472,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AssignPermissionsPayload: AssignPermissionsPayload;
   Boolean: Scalars['Boolean']['output'];
   Collaboration: Collaboration;
   CreateClientContactPayload: CreateClientContactPayload;
@@ -545,6 +559,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   csCreateCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, RequireFields<MutationCsCreateCollaborationArgs, 'payload'>>;
   csEditCollaboration?: Resolver<ResolversTypes['Collaboration'], ParentType, ContextType, Partial<MutationCsEditCollaborationArgs>>;
   deleteAUser?: Resolver<ResolversTypes['DeleteUserResponse'], ParentType, ContextType, RequireFields<MutationDeleteAUserArgs, 'id'>>;
+  umsAssignPermissionsToRole?: Resolver<ResolversTypes['PermissionsResponse'], ParentType, ContextType, RequireFields<MutationUmsAssignPermissionsToRoleArgs, 'payload'>>;
   umsSignUp?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<MutationUmsSignUpArgs, 'payload'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
 };

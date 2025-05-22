@@ -1,6 +1,7 @@
 import { GraphQLError } from "graphql";
 import prisma from "../../prisma/index.ts";
 import {
+  AssignPermissionsPayload,
   CreateUserPayload,
   DeleteStatus,
   DeleteUserResponse,
@@ -31,12 +32,13 @@ export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
     email: data.email,
     id: data.id,
     name: data.name,
-    role: data.roleData.roleEnum as UserRole,
+    role: (data.roleData?.roleEnum as UserRole) ?? undefined,
     createdAt: data.createdAt.toISOString(),
     updatedAt: data.updatedAt.toISOString(),
-    permissions: data.roleData.permissions.map(
-      (it) => it.permissionName
-    ) as PermissionValue[],
+    permissions:
+      (data.roleData?.permissions?.map(
+        (it) => it.permissionName
+      ) as PermissionValue[]) ?? [],
   };
 };
 
@@ -44,8 +46,15 @@ export const fetchAllUsers = async (
   payload?: QueryGetAllUsersArgs["payload"]
 ) => {
   // fetch all users from DB - user
-  const users = await prisma.user.findMany(
-    payload && {
+  const users = await prisma.user.findMany({
+    include: {
+      roleData: {
+        include: {
+          permissions: true,
+        },
+      },
+    },
+    ...(payload && {
       where: {
         AND:
           payload?.search?.map((it) => {
@@ -57,21 +66,11 @@ export const fetchAllUsers = async (
             };
           }) ?? [],
       },
-      orderBy: payload?.sort
-        ? {
-            [payload.sort.key]:
-              graphQLToPrismaSortingLabels[payload.sort.value],
-          }
-        : {},
-      include: {
-        roleData: {
-          include: {
-            permissions: true,
-          },
-        },
+      orderBy: payload?.sort && {
+        [payload.sort.key]: graphQLToPrismaSortingLabels[payload.sort.value],
       },
-    }
-  );
+    }),
+  });
 
   // map data from Prisma schema to graphql Schema
   const finalRes: User[] = users.map((it) => ({
@@ -79,9 +78,10 @@ export const fetchAllUsers = async (
     role: it.roleData.roleEnum as UserRole,
     createdAt: it.createdAt.toISOString(),
     updatedAt: it.updatedAt.toISOString(),
-    permissions: it.roleData.permissions.map(
-      (perm) => perm.permissionName
-    ) as PermissionValue[],
+    permissions:
+      (it.roleData?.permissions?.map(
+        (perm) => perm.permissionName
+      ) as PermissionValue[]) ?? [],
   }));
 
   return finalRes;
@@ -156,7 +156,7 @@ export const updateUserDetails = async (
       name: payload.name,
       roleData: {
         connect: {
-          roleEnum: payload.role,
+          roleEnum: payload.role ?? UserRole.User,
         },
       },
     },
@@ -188,7 +188,7 @@ export const createNewUser = async (payload: CreateUserPayload) => {
       saltKey: hashObject.salt,
       roleData: {
         connect: {
-          roleEnum: payload.role,
+          roleEnum: payload.role ?? UserRole.User,
         },
       },
     },
@@ -306,10 +306,48 @@ export const getPermissionsByUserId = async (
 
   return {
     permissions:
-      (permissions.roleData.permissions.map(
+      (permissions.roleData?.permissions?.map(
         (it) => it.permissionName
       ) as PermissionValue[]) ?? [],
-    role: permissions.roleData.roleEnum as UserRole,
-    totalCount: permissions.roleData.permissions.length,
+    role: permissions.roleData?.roleEnum as UserRole,
+    totalCount: permissions.roleData?.permissions.length,
   };
+};
+
+export const updateRolePermissions = async (
+  payload: AssignPermissionsPayload
+): Promise<PermissionsResponse> => {
+  // create all the new permissions in the table
+  await prisma.permissions.createMany({
+    data: payload.permissions.map((permissionName) => ({ permissionName })),
+    skipDuplicates: true,
+  });
+
+  // connect those new permissions to the role
+  const perms = await prisma.role.update({
+    where: {
+      roleEnum: payload.role,
+    },
+    data: {
+      permissions: {
+        connect: payload.permissions.map((permissionName) => ({
+          permissionName,
+        })),
+      },
+    },
+    select: {
+      permissions: true,
+    },
+  });
+
+  // return all permissions for that role with updated ones
+  const finalRes: PermissionsResponse = {
+    permissions: perms.permissions.map(
+      (it) => it.permissionName
+    ) as PermissionValue[],
+    role: payload.role,
+    totalCount: perms.permissions.length,
+  };
+
+  return finalRes;
 };

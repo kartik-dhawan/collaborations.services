@@ -5,14 +5,19 @@ import {
   GraphQLRequestExecutionListener,
 } from "@apollo/server";
 import { GraphQLError } from "graphql";
-import { QueryMutationKeys, MyAuthCtx } from "./utils/interfaces.ts";
+import {
+  QueryMutationKeys,
+  MyAuthCtx,
+  GraphqlCustomContextType,
+} from "./utils/interfaces.ts";
 import { responseMessages } from "./utils/messages.ts";
 import { applyMiddleware } from "graphql-middleware";
 import resolvers from "./resolvers/index.ts";
 import typeDefs from "./typeDefs/index.ts";
 import { GraphQLSchemaWithFragmentReplacements } from "graphql-middleware/types";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-
+import { rule, shield } from "graphql-shield";
+import { PermissionValue, Resolvers } from "./generated/graphql.ts";
 export const WHITE_LIST: QueryMutationKeys[] = ["umsLogin", "umsSignUp"];
 
 export const whiteListSet: Set<QueryMutationKeys> = new Set(WHITE_LIST);
@@ -75,6 +80,18 @@ export const protectedRoutesPlugin: ApolloServerPlugin<MyAuthCtx> = {
 };
 
 /**
+ * returns a rule if the permissions sent matches the permissins from context
+ */
+const userPerm = (permissions: PermissionValue[]) => {
+  return rule({ cache: "contextual" })(
+    async (_, __, ctx: GraphqlCustomContextType) => {
+      const userPermissions = new Set(ctx.user?.permissions);
+      return permissions.every((it) => userPermissions.has(it));
+    }
+  );
+};
+
+/**
  *  a function which takes typeDefs & resolvers, converts them into a schema
  *
  *  later returns that schema with added permissions for authorization & authentication
@@ -86,7 +103,37 @@ export const getProtectedSchema = (): GraphQLSchemaWithFragmentReplacements => {
   const rawSchema = makeExecutableSchema({ typeDefs, resolvers });
 
   /* 2. Wrap with shield */
-  const schema = applyMiddleware(rawSchema, {} /** permissions */);
+  const schema = applyMiddleware(
+    rawSchema,
+    shield<Resolvers<GraphqlCustomContextType>, GraphqlCustomContextType>({
+      Query: {
+        getAllUsers: userPerm([PermissionValue.ReadUserData]),
+        getUserById: userPerm([PermissionValue.ReadUserData]),
+        csGetCollaborations: userPerm[PermissionValue.ReadCollaboraionsData],
+        csGetClients: userPerm([PermissionValue.ReadClientData]),
+      },
+      Mutation: {
+        createUser: userPerm([PermissionValue.CreateNewUser]),
+        updateUser: userPerm([
+          PermissionValue.UpdateUser,
+          PermissionValue.CreateNewUser,
+        ]),
+        deleteAUser: userPerm([
+          PermissionValue.DeleteAUser,
+          PermissionValue.CreateNewUser,
+        ]),
+        umsAssignPermissionsToRole: userPerm([
+          PermissionValue.AssignPermissions,
+        ]),
+        csCreateCollaboration: userPerm([PermissionValue.CreateCollaboration]),
+        csEditCollaboration: userPerm([
+          PermissionValue.EditCollaboration,
+          PermissionValue.CreateCollaboration,
+        ]),
+        csCreateClient: userPerm([PermissionValue.CreateClient]),
+      },
+    })
+  );
 
   return schema;
 };

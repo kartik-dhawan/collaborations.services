@@ -8,12 +8,13 @@ import {
   generateNewUserToken,
   getPermissionsByUserId,
   updateUserDetails,
+  updateRolePermissions,
   userLoginHandler,
 } from "../actions/index.ts";
-import { responseMessages } from "../utils/index.ts";
+import { GraphqlCustomContextType, responseMessages } from "../utils/index.ts";
 
 /** QUERIES */
-export const userQueries: Resolvers["Query"] = {
+export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
   getAllUsers: async (_, { payload }) => {
     try {
       const users: User[] = await fetchAllUsers(payload);
@@ -60,7 +61,7 @@ export const userQueries: Resolvers["Query"] = {
 };
 
 /** MUTATIONS */
-export const userMutations: Resolvers["Mutation"] = {
+export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   updateUser: async (_, { payload }) => {
     try {
       const updatedUser = await updateUserDetails(payload);
@@ -117,6 +118,17 @@ export const userMutations: Resolvers["Mutation"] = {
         token: accessToken,
         message: responseMessages.USER.CREATION_SUCCESS,
       };
+    } catch (error) {
+      throw new GraphQLError(
+        error instanceof Error ? error.message : error.toString()
+      );
+    }
+  },
+
+  umsAssignPermissionsToRole: async (_, { payload }) => {
+    try {
+      const userWithUpdatedPerms = await updateRolePermissions(payload);
+      return userWithUpdatedPerms;
     } catch (error) {
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()
