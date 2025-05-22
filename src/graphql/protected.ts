@@ -16,11 +16,13 @@ import resolvers from "./resolvers/index.ts";
 import typeDefs from "./typeDefs/index.ts";
 import { GraphQLSchemaWithFragmentReplacements } from "graphql-middleware/types";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { rule, shield } from "graphql-shield";
+import { allow, and, rule, shield } from "graphql-shield";
 import { PermissionValue, Resolvers } from "./generated/graphql.ts";
 export const WHITE_LIST: QueryMutationKeys[] = ["umsLogin", "umsSignUp"];
 
 export const whiteListSet: Set<QueryMutationKeys> = new Set(WHITE_LIST);
+
+// FOR CHECKING AUTHENTICATION WITHOUT ANY EXTERNAL PACKAGES
 
 /** @description
  * plugin
@@ -85,11 +87,20 @@ export const protectedRoutesPlugin: ApolloServerPlugin<MyAuthCtx> = {
 const userPerm = (permissions: PermissionValue[]) => {
   return rule({ cache: "contextual" })(
     async (_, __, ctx: GraphqlCustomContextType) => {
+      // throw error of authentication if no user is found in the context
+      if (!ctx.user) {
+        return new GraphQLError(responseMessages.USER.USER_NOT_AUTHENTICATED);
+      }
+
+      // then check if user has permission to access this request
       const userPermissions = new Set(ctx.user?.permissions);
+
       return permissions.every((it) => userPermissions.has(it));
     }
   );
 };
+
+// FOR CHECKING AUTHENTICATION & AUTHORIZATION WITH GRAPHQL-SHIELD
 
 /**
  *  a function which takes typeDefs & resolvers, converts them into a schema
@@ -105,34 +116,49 @@ export const getProtectedSchema = (): GraphQLSchemaWithFragmentReplacements => {
   /* 2. Wrap with shield */
   const schema = applyMiddleware(
     rawSchema,
-    shield<Resolvers<GraphqlCustomContextType>, GraphqlCustomContextType>({
-      Query: {
-        getAllUsers: userPerm([PermissionValue.ReadUserData]),
-        getUserById: userPerm([PermissionValue.ReadUserData]),
-        csGetCollaborations: userPerm[PermissionValue.ReadCollaboraionsData],
-        csGetClients: userPerm([PermissionValue.ReadClientData]),
+    shield(
+      {
+        Query: {
+          umsLogin: allow, // whitelisting login query
+
+          getAllUsers: userPerm([PermissionValue.ReadUserData]),
+          getUserById: userPerm([PermissionValue.ReadUserData]),
+          csGetCollaborations: userPerm([
+            PermissionValue.ReadCollaboraionsData,
+          ]),
+          csGetClients: userPerm([PermissionValue.ReadClientData]),
+        },
+        Mutation: {
+          umsSignUp: allow, // whitelisting sign up mutation
+
+          createUser: userPerm([PermissionValue.CreateNewUser]),
+          updateUser: userPerm([
+            PermissionValue.UpdateUser,
+            PermissionValue.CreateNewUser,
+          ]),
+          deleteAUser: userPerm([
+            PermissionValue.DeleteAUser,
+            PermissionValue.CreateNewUser,
+          ]),
+          umsAssignPermissionsToRole: userPerm([
+            PermissionValue.AssignPermissions,
+          ]),
+          csCreateCollaboration: userPerm([
+            PermissionValue.CreateCollaboration,
+          ]),
+          csEditCollaboration: userPerm([
+            PermissionValue.EditCollaboration,
+            PermissionValue.CreateCollaboration,
+          ]),
+          csCreateClient: userPerm([PermissionValue.CreateClient]),
+        },
       },
-      Mutation: {
-        createUser: userPerm([PermissionValue.CreateNewUser]),
-        updateUser: userPerm([
-          PermissionValue.UpdateUser,
-          PermissionValue.CreateNewUser,
-        ]),
-        deleteAUser: userPerm([
-          PermissionValue.DeleteAUser,
-          PermissionValue.CreateNewUser,
-        ]),
-        umsAssignPermissionsToRole: userPerm([
-          PermissionValue.AssignPermissions,
-        ]),
-        csCreateCollaboration: userPerm([PermissionValue.CreateCollaboration]),
-        csEditCollaboration: userPerm([
-          PermissionValue.EditCollaboration,
-          PermissionValue.CreateCollaboration,
-        ]),
-        csCreateClient: userPerm([PermissionValue.CreateClient]),
-      },
-    })
+      {
+        fallbackRule: allow, // if no route is mentioned in it, allow that by default
+        fallbackError: responseMessages.USER.USER__NOT_AUTHORISED,
+        allowExternalErrors: true, // allow other errors to be displayed as they are
+      }
+    )
   );
 
   return schema;

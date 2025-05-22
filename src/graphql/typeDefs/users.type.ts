@@ -21,6 +21,7 @@ const userDefs = gql`
   enum UserRole {
     USER
     ADMIN
+    SUPPORT
   }
 
   enum UserSearchFields {
@@ -82,6 +83,7 @@ const userDefs = gql`
   enum PermissionValue {
     CREATE_NEW_USER
     READ_USER_DATA
+    READ_USER_DATA_BY_ID
     UPDATE_USER
     DELETE_A_USER
     ASSIGN_PERMISSIONS

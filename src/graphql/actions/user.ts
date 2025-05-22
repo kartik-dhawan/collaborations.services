@@ -229,7 +229,7 @@ export const deleteUser = async (
   }
 };
 
-export const generateNewUserToken = (user: User) => {
+export const generateNewUserToken = (user: Omit<User, "permissions">) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
     algorithm: "HS256",
     expiresIn: 60 * 60, // 1 hour
@@ -259,7 +259,8 @@ export const userLoginHandler = async (
     throw new GraphQLError(responseMessages.USER.INCORRECT_PASSWORD);
   }
 
-  const accessToken = generateNewUserToken(user);
+  const { permissions, ...restUser } = user;
+  const accessToken = generateNewUserToken(restUser);
 
   return {
     user,

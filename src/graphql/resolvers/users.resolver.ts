@@ -15,7 +15,7 @@ import { GraphqlCustomContextType, responseMessages } from "../utils/index.ts";
 
 /** QUERIES */
 export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
-  getAllUsers: async (_, { payload }) => {
+  getAllUsers: async (_, { payload }, context) => {
     try {
       const users: User[] = await fetchAllUsers(payload);
       return users;
@@ -78,6 +78,7 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
       const createdUser = await createNewUser(payload);
       return createdUser;
     } catch (error) {
+      console.log({ error });
       throw new GraphQLError(
         error instanceof Error ? error.message : error.toString()
       );
@@ -107,7 +108,8 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
 
       // if the user is created, generate a token for the user
       // and return the user & token
-      const accessToken = generateNewUserToken(createdUser);
+      const { permissions, ...restUser } = createdUser;
+      const accessToken = generateNewUserToken(restUser);
 
       if (!accessToken) {
         throw new GraphQLError(responseMessages.USER.SIGN_UP_FAILED);

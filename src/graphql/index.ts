@@ -3,9 +3,13 @@ import { ApolloServer } from "@apollo/server"; // Importing ApolloServer for Gra
 import { expressMiddleware } from "@apollo/server/express4"; // Importing expressMiddleware to integrate Apollo with Express
 import dotenv from "dotenv";
 import prisma from "../prisma/index.ts";
-import { getProtectedSchema, protectedRoutesPlugin } from "./protected.ts";
+import { getProtectedSchema } from "./protected.ts";
 import { JwtUser } from "./utils/interfaces.ts";
-import { verifyJwtAndAuthenticate } from "./actions/index.ts";
+import {
+  getPermissionsByUserId,
+  verifyJwtAndAuthenticate,
+} from "./actions/index.ts";
+import { User } from "./generated/graphql.ts";
 
 dotenv.config();
 
@@ -24,11 +28,11 @@ const startServer = async () => {
   // Creating a new Apollo Server instance with type definitions and resolvers
   const server = new ApolloServer({
     schema: protectedSchema,
-    plugins: [protectedRoutesPlugin],
     formatError: (err) => {
       return {
         message: err.message,
         path: err.path,
+        completeError: err,
       };
     },
   });
@@ -49,7 +53,15 @@ const startServer = async () => {
             authToken
           ); // verify the token & return the data from it if present
 
-          return { req, res, user }; // Returning the request, response & user objects in the context
+          let userContext: User | undefined = undefined;
+
+          // setup permissions in the context as well, we find permissions after we get the user
+          if (user?.id) {
+            const { permissions } = await getPermissionsByUserId(user.id);
+            userContext = { ...user, permissions };
+          }
+
+          return { req, res, user: userContext }; // Returning the request, response & user objects in the context
         },
       })
     );

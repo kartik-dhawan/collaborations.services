@@ -238,6 +238,7 @@ export enum PermissionValue {
   ReadClientData = 'READ_CLIENT_DATA',
   ReadCollaboraionsData = 'READ_COLLABORAIONS_DATA',
   ReadUserData = 'READ_USER_DATA',
+  ReadUserDataById = 'READ_USER_DATA_BY_ID',
   UpdateUser = 'UPDATE_USER'
 }
 
@@ -342,6 +343,7 @@ export type UserProfile = {
 
 export enum UserRole {
   Admin = 'ADMIN',
+  Support = 'SUPPORT',
   User = 'USER'
 }
 

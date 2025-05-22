@@ -13,5 +13,7 @@ export const responseMessages = {
       "Incorrect password. Please check your credentials and try again.",
     USER_NOT_AUTHENTICATED:
       "The user is not authenticated. Please login & try again.",
+    USER__NOT_AUTHORISED:
+      "The signed in user does not have permissions to access this request.",
   },
 };
