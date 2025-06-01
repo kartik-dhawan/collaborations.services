@@ -23,6 +23,7 @@ export const WHITE_LIST: QueryMutationKeys[] = ["umsLogin", "umsSignUp"];
 export const whiteListSet: Set<QueryMutationKeys> = new Set(WHITE_LIST);
 
 // FOR CHECKING AUTHENTICATION WITHOUT ANY EXTERNAL PACKAGES
+// @@ depricated, not used in this project anymore
 
 /** @description
  * plugin
