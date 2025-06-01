@@ -42,6 +42,7 @@ const userDefs = gql`
   input FetchUserPayload {
     search: [UserSearch!]
     sort: UserSorting
+    pagination: PaginationInput!
   }
 
   input UpdateUserPayload {

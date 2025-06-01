@@ -167,6 +167,7 @@ export type DeleteUserResponse = {
 };
 
 export type FetchUserPayload = {
+  pagination: PaginationInput;
   search?: InputMaybe<Array<UserSearch>>;
   sort?: InputMaybe<UserSorting>;
 };
@@ -227,6 +228,11 @@ export enum OrderBy {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type PaginationInput = {
+  pageNumber: Scalars['Int']['input'];
+  pageSize: Scalars['Int']['input'];
+};
 
 export enum PermissionValue {
   AssignPermissions = 'ASSIGN_PERMISSIONS',
@@ -455,6 +461,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OrderBy: OrderBy;
+  PaginationInput: PaginationInput;
   PermissionValue: PermissionValue;
   PermissionsResponse: ResolverTypeWrapper<PermissionsResponse>;
   Query: ResolverTypeWrapper<{}>;
@@ -488,6 +495,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
+  PaginationInput: PaginationInput;
   PermissionsResponse: PermissionsResponse;
   Query: {};
   SignInResponse: SignInResponse;

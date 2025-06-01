@@ -10,6 +10,11 @@ const commonDefs = gql`
     SUCCESS
     FAILED
   }
+
+  input PaginationInput {
+    pageNumber: Int!
+    pageSize: Int!
+  }
 `;
 
 export default commonDefs;

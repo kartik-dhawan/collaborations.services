@@ -45,6 +45,10 @@ export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
 export const fetchAllUsers = async (
   payload?: QueryGetAllUsersArgs["payload"]
 ) => {
+  const {
+    pagination: { pageNumber, pageSize },
+  } = payload;
+
   // fetch all users from DB - user
   const users = await prisma.user.findMany({
     include: {
@@ -70,6 +74,8 @@ export const fetchAllUsers = async (
         [payload.sort.key]: graphQLToPrismaSortingLabels[payload.sort.value],
       },
     }),
+    skip: (pageNumber - 1) * pageSize,
+    take: pageSize,
   });
 
   // map data from Prisma schema to graphql Schema
