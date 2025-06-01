@@ -260,7 +260,7 @@ export type Query = {
   csGetClients: Array<CsClientSummary>;
   csGetCollaborations: Array<Collaboration>;
   getAllUsers?: Maybe<Array<User>>;
-  getUserById: User;
+  getUserById?: Maybe<User>;
   umsGetUserPermissions: PermissionsResponse;
   umsLogin: SignInResponse;
 };
@@ -585,7 +585,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   csGetClients?: Resolver<Array<ResolversTypes['CsClientSummary']>, ParentType, ContextType>;
   csGetCollaborations?: Resolver<Array<ResolversTypes['Collaboration']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType, Partial<QueryGetAllUsersArgs>>;
-  getUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
+  getUserById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
   umsGetUserPermissions?: Resolver<ResolversTypes['PermissionsResponse'], ParentType, ContextType, RequireFields<QueryUmsGetUserPermissionsArgs, 'userId'>>;
   umsLogin?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<QueryUmsLoginArgs, 'payload'>>;
 };

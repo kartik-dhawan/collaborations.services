@@ -33,8 +33,8 @@ export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
     id: data.id,
     name: data.name,
     role: (data.roleData?.roleEnum as UserRole) ?? undefined,
-    createdAt: data.createdAt.toISOString(),
-    updatedAt: data.updatedAt.toISOString(),
+    createdAt: data.createdAt?.toISOString() ?? "",
+    updatedAt: data.updatedAt?.toISOString() ?? "",
     permissions:
       (data.roleData?.permissions?.map(
         (it) => it.permissionName
@@ -45,9 +45,8 @@ export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
 export const fetchAllUsers = async (
   payload?: QueryGetAllUsersArgs["payload"]
 ) => {
-  const {
-    pagination: { pageNumber, pageSize },
-  } = payload;
+  const { pagination } = payload ?? {};
+  const { pageNumber, pageSize } = pagination ?? {};
 
   // fetch all users from DB - user
   const users = await prisma.user.findMany({
@@ -70,11 +69,14 @@ export const fetchAllUsers = async (
             };
           }) ?? [],
       },
-      orderBy: payload?.sort && {
-        [payload.sort.key]: graphQLToPrismaSortingLabels[payload.sort.value],
-      },
+      orderBy: payload?.sort
+        ? {
+            [payload.sort.key]:
+              graphQLToPrismaSortingLabels[payload.sort.value],
+          }
+        : {},
     }),
-    skip: (pageNumber - 1) * pageSize,
+    skip: (pageNumber! - 1) * pageSize!,
     take: pageSize,
   });
 
@@ -82,8 +84,8 @@ export const fetchAllUsers = async (
   const finalRes: User[] = users.map((it) => ({
     ...it,
     role: it.roleData.roleEnum as UserRole,
-    createdAt: it.createdAt.toISOString(),
-    updatedAt: it.updatedAt.toISOString(),
+    createdAt: it.createdAt?.toISOString() ?? "",
+    updatedAt: it.updatedAt?.toISOString() ?? "",
     permissions:
       (it.roleData?.permissions?.map(
         (perm) => perm.permissionName
@@ -107,6 +109,10 @@ export const fetchUserById = async (userId: number) => {
       },
     },
   });
+
+  if (!user) {
+    return null;
+  }
 
   // map data from Prisma schema to graphql Schema
   const finalRes: User = userDataMapperToGQL(user);
@@ -158,11 +164,11 @@ export const updateUserDetails = async (
     },
     // then update the data
     data: {
-      email: payload.email,
-      name: payload.name,
+      ...(payload.email && { email: payload?.email }),
+      ...(payload.name && { name: payload?.name }),
       roleData: {
         connect: {
-          roleEnum: payload.role ?? UserRole.User,
+          roleEnum: payload?.role ?? UserRole.User,
         },
       },
     },
@@ -236,7 +242,7 @@ export const deleteUser = async (
 };
 
 export const generateNewUserToken = (user: Omit<User, "permissions">) => {
-  return jwt.sign(user, process.env.JWT_SECRET, {
+  return jwt.sign(user, process.env.JWT_SECRET!, {
     algorithm: "HS256",
     expiresIn: 60 * 60, // 1 hour
   });
@@ -257,11 +263,11 @@ export const userLoginHandler = async (
   /** generate a new hash with the same key found from user in db */
   const generatedPasswordHash = generateHmacHash(
     payload.password,
-    userPassword.salt
+    userPassword?.salt
   );
 
   /** if the new hash matches the hash in the db, then password is the same */
-  if (userPassword.hash !== generatedPasswordHash.hash) {
+  if (userPassword?.hash !== generatedPasswordHash.hash) {
     throw new GraphQLError(responseMessages.USER.INCORRECT_PASSWORD);
   }
 
@@ -278,11 +284,11 @@ export const userLoginHandler = async (
 export const verifyJwtAndAuthenticate = async (
   authToken?: string
 ): Promise<JwtUser | undefined> => {
-  let user: JwtUser = undefined;
+  let user: JwtUser | undefined = undefined;
 
   if (authToken) {
     try {
-      user = jwt.verify(authToken, process.env.JWT_SECRET) as JwtUser;
+      user = jwt.verify(authToken, process.env.JWT_SECRET!) as JwtUser;
     } catch {
       user = undefined;
     }
@@ -313,11 +319,11 @@ export const getPermissionsByUserId = async (
 
   return {
     permissions:
-      (permissions.roleData?.permissions?.map(
+      (permissions?.roleData?.permissions?.map(
         (it) => it.permissionName
       ) as PermissionValue[]) ?? [],
-    role: permissions.roleData?.roleEnum as UserRole,
-    totalCount: permissions.roleData?.permissions.length,
+    role: permissions?.roleData?.roleEnum as UserRole,
+    totalCount: permissions?.roleData?.permissions?.length,
   };
 };
 
@@ -333,7 +339,7 @@ export const updateRolePermissions = async (
   // connect those new permissions to the role
   const perms = await prisma.role.update({
     where: {
-      roleEnum: payload.role,
+      roleEnum: payload.role!,
     },
     data: {
       permissions: {
@@ -353,7 +359,7 @@ export const updateRolePermissions = async (
       (it) => it.permissionName
     ) as PermissionValue[],
     role: payload.role,
-    totalCount: perms.permissions.length,
+    totalCount: perms?.permissions?.length,
   };
 
   return finalRes;

@@ -1,5 +1,10 @@
 import { GraphQLError } from "graphql";
-import { Resolvers, SignInResponse, User } from "../generated/graphql.ts";
+import {
+  Resolvers,
+  SignInResponse,
+  User,
+  UserRole,
+} from "../generated/graphql.ts";
 import {
   createNewUser,
   deleteUser,
@@ -12,6 +17,10 @@ import {
   userLoginHandler,
 } from "../actions/index.ts";
 import { GraphqlCustomContextType, responseMessages } from "../utils/index.ts";
+import {
+  createUserInputSchema,
+  deleteUserInputSchema,
+} from "../utils/validation/inputSchema.ts";
 
 /** QUERIES */
 export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
@@ -21,7 +30,7 @@ export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
       return users;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -32,7 +41,7 @@ export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
       return user;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -43,7 +52,7 @@ export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
       return signInResponse;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -54,7 +63,7 @@ export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
       return permissions;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -68,30 +77,38 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
       return updatedUser;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
 
   createUser: async (_, { payload }) => {
     try {
-      const createdUser = await createNewUser(payload);
+      // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
+      const validatedPayload = await createUserInputSchema.validate(payload, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      // use the validated input to create user
+      const createdUser = await createNewUser(validatedPayload);
       return createdUser;
     } catch (error) {
-      console.log({ error });
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
 
   deleteAUser: async (_, { id: userId }) => {
+    const validatedPayload = deleteUserInputSchema.validate(userId);
+
     try {
       const response = await deleteUser(userId);
       return response;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -122,7 +139,7 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
       };
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -133,7 +150,7 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
       return userWithUpdatedPerms;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },

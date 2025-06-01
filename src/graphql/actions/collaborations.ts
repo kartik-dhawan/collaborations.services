@@ -41,7 +41,7 @@ const collborationDataMapper = (
     clientContacts:
       data.client.contactPeople.map((contact) => ({
         id: contact.id,
-        name: contact.name,
+        name: contact.name!,
         email: contact.email,
         phone: contact.phone,
         createdAt: contact.createdAt.toISOString(),
@@ -81,7 +81,7 @@ export const createNewCollaboration = async (
       type: payload.type,
       name: payload.name,
       collabNotes: payload.collabNotes,
-      dealDate: new Date(payload.dealDate),
+      dealDate: new Date(payload.dealDate!),
       deliverables: payload.deliverables,
       deliverableStatus: payload.deliverableStatus,
       deliverableDate: payload.deliverableDate,
@@ -105,21 +105,23 @@ export const createNewCollaboration = async (
           }
         : {
             create: {
-              clientNotes: payload.clientPayload.clientNotes,
-              instagram: payload.clientPayload.instagram,
-              name: payload.clientPayload.name,
+              clientNotes: payload?.clientPayload?.clientNotes,
+              instagram: payload?.clientPayload?.instagram,
+              name: payload?.clientPayload?.name!,
               contactPeople: {
-                create: payload.clientPayload.clientContacts.map((contact) => ({
-                  name: contact.name,
-                  email: contact.email,
-                  phone: contact.phone,
-                  contactNotes: contact.clientNotes,
-                  user: {
-                    connect: {
-                      id: user.id,
+                create: payload?.clientPayload?.clientContacts.map(
+                  (contact) => ({
+                    name: contact.name,
+                    email: contact.email,
+                    phone: contact.phone,
+                    contactNotes: contact.clientNotes,
+                    user: {
+                      connect: {
+                        id: user.id,
+                      },
                     },
-                  },
-                })),
+                  })
+                ),
               },
               user: {
                 connect: {
@@ -152,13 +154,13 @@ export const updateCollaborationByID = async (
       id: payload.id,
     },
     data: {
-      collabStatus: payload.collabStatus,
-      type: payload.type,
+      collabStatus: payload.collabStatus!,
+      type: payload.type!,
       name: payload.name,
       collabNotes: payload.collabNotes,
       dealDate: payload.dealDate ? new Date(payload.dealDate) : undefined,
-      deliverables: payload.deliverables,
-      deliverableStatus: payload.deliverableStatus,
+      deliverables: payload.deliverables!,
+      deliverableStatus: payload.deliverableStatus!,
       deliverableDate: payload?.deliverableDate
         ? new Date(payload?.deliverableDate)
         : undefined,
@@ -167,7 +169,7 @@ export const updateCollaborationByID = async (
       paymentDate: payload.paymentDate
         ? new Date(payload.paymentDate)
         : undefined,
-      paymentStatus: payload.paymentStatus,
+      paymentStatus: payload.paymentStatus!,
       deliverableNotes: payload.deliverableNotes,
       client: {
         update: {

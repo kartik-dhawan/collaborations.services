@@ -16,8 +16,8 @@ import resolvers from "./resolvers/index.ts";
 import typeDefs from "./typeDefs/index.ts";
 import { GraphQLSchemaWithFragmentReplacements } from "graphql-middleware/types";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { allow, and, rule, shield } from "graphql-shield";
-import { PermissionValue, Resolvers } from "./generated/graphql.ts";
+import { allow, rule, shield } from "graphql-shield";
+import { PermissionValue } from "./generated/graphql.ts";
 export const WHITE_LIST: QueryMutationKeys[] = ["umsLogin", "umsSignUp"];
 
 export const whiteListSet: Set<QueryMutationKeys> = new Set(WHITE_LIST);

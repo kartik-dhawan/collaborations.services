@@ -12,7 +12,7 @@ export const clientQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
       return clientsData;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -29,7 +29,7 @@ export const clientMutations: Resolvers<GraphqlCustomContextType>["Mutation"] =
         return createdClient;
       } catch (error) {
         throw new GraphQLError(
-          error instanceof Error ? error.message : error.toString()
+          error instanceof Error ? error.message : String(error)
         );
       }
     },

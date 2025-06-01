@@ -9,8 +9,8 @@ export type HmacHashObject = {
   hash: string;
 };
 
-export type QueryMutationKeys = keyof (Resolvers["Query"] &
-  Resolvers["Mutation"]);
+export type QueryMutationKeys = keyof (Required<Resolvers>["Query"] &
+  Required<Resolvers>["Mutation"]);
 
 export type GraphqlCustomContextType = ExpressContextFunctionArgument & {
   user: User;

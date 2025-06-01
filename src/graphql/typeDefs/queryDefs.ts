@@ -4,7 +4,7 @@ const queryDefs = gql`
   type Query {
     # USER queries
     getAllUsers(payload: FetchUserPayload): [User!]
-    getUserById(id: Int!): User!
+    getUserById(id: Int!): User
     umsLogin(payload: UserLoginPayload!): SignInResponse!
     umsGetUserPermissions(userId: Int!): PermissionsResponse!
 

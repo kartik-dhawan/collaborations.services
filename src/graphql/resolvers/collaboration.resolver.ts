@@ -17,7 +17,7 @@ export const collabQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
       return collaborations;
     } catch (error) {
       throw new GraphQLError(
-        error instanceof Error ? error.message : error.toString()
+        error instanceof Error ? error.message : String(error)
       );
     }
   },
@@ -38,18 +38,21 @@ export const collabMutations: Resolvers<GraphqlCustomContextType>["Mutation"] =
         return createdCollaboration;
       } catch (error) {
         throw new GraphQLError(
-          error instanceof Error ? error.message : error.toString()
+          error instanceof Error ? error.message : String(error)
         );
       }
     },
 
     csEditCollaboration: async (_, { payload }) => {
       try {
+        if (!payload) {
+          throw new GraphQLError("Edit input is required");
+        }
         const updatedCollaboration = await updateCollaborationByID(payload);
         return updatedCollaboration;
       } catch (error) {
         throw new GraphQLError(
-          error instanceof Error ? error.message : error.toString()
+          error instanceof Error ? error.message : String(error)
         );
       }
     },

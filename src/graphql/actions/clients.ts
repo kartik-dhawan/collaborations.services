@@ -19,7 +19,7 @@ export const clientsDataMapperToGQL = (
   clientContacts:
     item.contactPeople.map((contact) => ({
       id: contact.id,
-      name: contact.name,
+      name: contact.name!,
       email: contact.email,
       phone: contact.phone,
       clientNotes: contact.contactNotes,
