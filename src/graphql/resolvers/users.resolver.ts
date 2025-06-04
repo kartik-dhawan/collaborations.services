@@ -101,10 +101,10 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   },
 
   deleteAUser: async (_, { id: userId }) => {
-    const validatedPayload = deleteUserInputSchema.validate(userId);
+    const validatedInput = await deleteUserInputSchema.validate(userId);
 
     try {
-      const response = await deleteUser(userId);
+      const response = await deleteUser(validatedInput);
       return response;
     } catch (error) {
       throw new GraphQLError(

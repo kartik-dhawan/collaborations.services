@@ -10,10 +10,11 @@ import {
   verifyJwtAndAuthenticate,
 } from "./actions/index.ts";
 import { User } from "./generated/graphql.ts";
+import logger from "../../winston.config.ts";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3002; // Setting the port from environment variable or defaulting to 3002
+const PORT = process.env.PORT ?? 3002; // Setting the port from environment variable or defaulting to 3002
 
 // Function to start the server
 const startServer = async () => {
@@ -67,10 +68,12 @@ const startServer = async () => {
     );
 
     app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}/graphql`); // Logging the server URL
+      logger.common.info(
+        `Server is running on http://localhost:${PORT}/graphql`
+      ); // Logging any errors that occur during server startup
     });
   } catch (error) {
-    console.error("Server startup error:", error); // Logging any errors that occur during server startup
+    logger.common.error("Server startup error:", error); // Logging any errors that occur during server startup
     prisma.$disconnect();
   }
 };
