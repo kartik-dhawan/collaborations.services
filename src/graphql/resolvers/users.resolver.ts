@@ -1,10 +1,5 @@
 import { GraphQLError } from "graphql";
-import {
-  Resolvers,
-  SignInResponse,
-  User,
-  UserRole,
-} from "../generated/graphql.ts";
+import { Resolvers, SignInResponse, User } from "../generated/graphql.ts";
 import {
   createNewUser,
   deleteUser,
