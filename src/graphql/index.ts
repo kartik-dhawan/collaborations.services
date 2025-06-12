@@ -53,7 +53,7 @@ const startServer = async () => {
     // – This WebSocket server will handle the upgrade requests from the HTTP server.
     // You don’t open a second port just for WebSockets—you reuse the same door.
 
-    path: "/subscriptions",
+    path: "/graphql",
     // – Only treats ws://…/subscriptions upgrade requests as WebSockets.
     // – Everything else (e.g. GET /graphql) stays with Express.
   });
@@ -133,10 +133,13 @@ const startServer = async () => {
       })
     );
 
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       logger.common.info(
         `Server is running on http://localhost:${PORT}/graphql`
-      ); // Logging any errors that occur during server startup
+      );
+      logger.common.info(
+        `Subscription endpoint ready at ws://localhost:${PORT}/graphql`
+      );
     });
   } catch (error) {
     logger.common.error("Server startup error:", error); // Logging any errors that occur during server startup

@@ -2,6 +2,7 @@ import { Resolvers } from "../generated/graphql.ts";
 import { clientMutations, clientQueries } from "./clients.resolver.ts";
 import { collabMutations, collabQueries } from "./collaboration.resolver.ts";
 import { userMutations, userQueries } from "./users.resolver.ts";
+import { subscriptionResolvers } from "./subscription.resolver.ts";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -13,6 +14,9 @@ export const resolvers: Resolvers = {
     ...userMutations,
     ...collabMutations,
     ...clientMutations,
+  },
+  Subscription: {
+    ...subscriptionResolvers,
   },
 };
 

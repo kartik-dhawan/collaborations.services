@@ -16,6 +16,7 @@ import {
   createUserInputSchema,
   deleteUserInputSchema,
 } from "../utils/validation/inputSchema.ts";
+import { notificationsPubSub } from "../pubsub.ts";
 
 /** QUERIES */
 export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
@@ -69,6 +70,12 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   updateUser: async (_, { payload }) => {
     try {
       const updatedUser = await updateUserDetails(payload);
+
+      notificationsPubSub.publish({
+        message: "User has been updated.",
+        data: updatedUser,
+      });
+
       return updatedUser;
     } catch (error) {
       throw new GraphQLError(
@@ -87,6 +94,12 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
 
       // use the validated input to create user
       const createdUser = await createNewUser(validatedPayload);
+
+      notificationsPubSub.publish({
+        message: "A new user has been created.",
+        data: createdUser,
+      });
+
       return createdUser;
     } catch (error) {
       throw new GraphQLError(

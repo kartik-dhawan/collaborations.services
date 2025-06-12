@@ -292,6 +292,11 @@ export type SignInResponse = {
   user: User;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  appNotifications: Scalars['String']['output'];
+};
+
 export type UpdateCollabClientPayload = {
   clientNotes?: InputMaybe<Scalars['String']['input']>;
   instagram?: InputMaybe<Scalars['String']['input']>;
@@ -467,6 +472,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   SignInResponse: ResolverTypeWrapper<SignInResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Subscription: ResolverTypeWrapper<{}>;
   UpdateCollabClientPayload: UpdateCollabClientPayload;
   UpdateCollaborationPayload: UpdateCollaborationPayload;
   UpdateUserPayload: UpdateUserPayload;
@@ -500,6 +506,7 @@ export type ResolversParentTypes = {
   Query: {};
   SignInResponse: SignInResponse;
   String: Scalars['String']['output'];
+  Subscription: {};
   UpdateCollabClientPayload: UpdateCollabClientPayload;
   UpdateCollaborationPayload: UpdateCollaborationPayload;
   UpdateUserPayload: UpdateUserPayload;
@@ -597,6 +604,10 @@ export type SignInResponseResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  appNotifications?: SubscriptionResolver<ResolversTypes['String'], "appNotifications", ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -625,6 +636,7 @@ export type Resolvers<ContextType = any> = {
   PermissionsResponse?: PermissionsResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInResponse?: SignInResponseResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserProfile?: UserProfileResolvers<ContextType>;
 };
