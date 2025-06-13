@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,6 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Json: { input: any; output: any; }
 };
 
 export type AssignPermissionsPayload = {
@@ -224,6 +225,15 @@ export type MutationUpdateUserArgs = {
   payload: UpdateUserPayload;
 };
 
+export type NotificationResponse = {
+  __typename?: 'NotificationResponse';
+  data?: Maybe<Scalars['Json']['output']>;
+  message: Scalars['String']['output'];
+  service: Scalars['String']['output'];
+  timeStamp: Scalars['Int']['output'];
+  user?: Maybe<User>;
+};
+
 export enum OrderBy {
   Asc = 'ASC',
   Desc = 'DESC'
@@ -294,7 +304,7 @@ export type SignInResponse = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  appNotifications: Scalars['String']['output'];
+  appNotifications: NotificationResponse;
 };
 
 export type UpdateCollabClientPayload = {
@@ -464,7 +474,9 @@ export type ResolversTypes = {
   FetchUserPayload: FetchUserPayload;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Json: ResolverTypeWrapper<Scalars['Json']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
+  NotificationResponse: ResolverTypeWrapper<NotificationResponse>;
   OrderBy: OrderBy;
   PaginationInput: PaginationInput;
   PermissionValue: PermissionValue;
@@ -500,7 +512,9 @@ export type ResolversParentTypes = {
   FetchUserPayload: FetchUserPayload;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  Json: Scalars['Json']['output'];
   Mutation: {};
+  NotificationResponse: NotificationResponse;
   PaginationInput: PaginationInput;
   PermissionsResponse: PermissionsResponse;
   Query: {};
@@ -570,6 +584,10 @@ export type DeleteUserResponseResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Json'], any> {
+  name: 'Json';
+}
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'payload'>>;
   csCreateClient?: Resolver<ResolversTypes['CsClientSummary'], ParentType, ContextType, RequireFields<MutationCsCreateClientArgs, 'payload'>>;
@@ -579,6 +597,15 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   umsAssignPermissionsToRole?: Resolver<ResolversTypes['PermissionsResponse'], ParentType, ContextType, RequireFields<MutationUmsAssignPermissionsToRoleArgs, 'payload'>>;
   umsSignUp?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<MutationUmsSignUpArgs, 'payload'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'payload'>>;
+};
+
+export type NotificationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['NotificationResponse'] = ResolversParentTypes['NotificationResponse']> = {
+  data?: Resolver<Maybe<ResolversTypes['Json']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  service?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  timeStamp?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PermissionsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionsResponse'] = ResolversParentTypes['PermissionsResponse']> = {
@@ -605,7 +632,7 @@ export type SignInResponseResolvers<ContextType = any, ParentType extends Resolv
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  appNotifications?: SubscriptionResolver<ResolversTypes['String'], "appNotifications", ParentType, ContextType>;
+  appNotifications?: SubscriptionResolver<ResolversTypes['NotificationResponse'], "appNotifications", ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -632,7 +659,9 @@ export type Resolvers<ContextType = any> = {
   CsClientContactDetails?: CsClientContactDetailsResolvers<ContextType>;
   CsClientSummary?: CsClientSummaryResolvers<ContextType>;
   DeleteUserResponse?: DeleteUserResponseResolvers<ContextType>;
+  Json?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
+  NotificationResponse?: NotificationResponseResolvers<ContextType>;
   PermissionsResponse?: PermissionsResponseResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInResponse?: SignInResponseResolvers<ContextType>;

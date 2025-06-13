@@ -16,6 +16,12 @@ export type GraphqlCustomContextType = ExpressContextFunctionArgument & {
   user: User;
 };
 
+export enum SERVICES {
+  UMS = "user-management-service",
+  COMMON = "common-services",
+  COLLABORATIONS = "collaborations",
+}
+
 /** ===========USER INTERFACES ================================================================================================== */
 export type UserPrismaToGQL = Prisma.UserGetPayload<{
   include: {

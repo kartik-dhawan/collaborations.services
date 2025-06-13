@@ -25,7 +25,7 @@ class PubSubSingleton {
   }
 }
 
-export const createTopicPubSub = (topic: string): BoundPubSub => {
+export const createTopicPubSub = (topic: PUBSUB_TOPICS): BoundPubSub => {
   const base = PubSubSingleton.getInstance();
 
   return {

@@ -11,16 +11,22 @@ import {
   updateRolePermissions,
   userLoginHandler,
 } from "../actions/index.ts";
-import { GraphqlCustomContextType, responseMessages } from "../utils/index.ts";
+import {
+  getNotificationObject,
+  GraphqlCustomContextType,
+  responseMessages,
+  SERVICES,
+} from "../utils/index.ts";
 import {
   createUserInputSchema,
   deleteUserInputSchema,
 } from "../utils/validation/inputSchema.ts";
 import { notificationsPubSub } from "../pubsub.ts";
+import logger from "../../../winston.config.ts";
 
 /** QUERIES */
 export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
-  getAllUsers: async (_, { payload }, context) => {
+  getAllUsers: async (_, { payload }) => {
     try {
       const users: User[] = await fetchAllUsers(payload);
       return users;
@@ -67,14 +73,18 @@ export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
 
 /** MUTATIONS */
 export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
-  updateUser: async (_, { payload }) => {
+  updateUser: async (_, { payload }, context) => {
     try {
       const updatedUser = await updateUserDetails(payload);
 
-      notificationsPubSub.publish({
-        message: "User has been updated.",
-        data: updatedUser,
-      });
+      notificationsPubSub.publish(
+        getNotificationObject({
+          message: `User with ID: ${payload.id} has been updated by ${context.user.name}`,
+          data: updatedUser,
+          service: SERVICES.UMS,
+          user: context.user,
+        })
+      );
 
       return updatedUser;
     } catch (error) {
@@ -84,7 +94,7 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
     }
   },
 
-  createUser: async (_, { payload }) => {
+  createUser: async (_, { payload }, context) => {
     try {
       // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
       const validatedPayload = await createUserInputSchema.validate(payload, {
@@ -95,26 +105,49 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
       // use the validated input to create user
       const createdUser = await createNewUser(validatedPayload);
 
-      notificationsPubSub.publish({
-        message: "A new user has been created.",
-        data: createdUser,
-      });
+      notificationsPubSub.publish(
+        getNotificationObject({
+          message: `A new user has been created by ${context.user.name}`,
+          data: createdUser,
+          service: SERVICES.UMS,
+          user: context.user,
+        })
+      );
 
       return createdUser;
     } catch (error) {
+      logger.user.error("Error while creating a user.", {
+        error,
+        payload,
+      });
       throw new GraphQLError(
         error instanceof Error ? error.message : String(error)
       );
     }
   },
 
-  deleteAUser: async (_, { id: userId }) => {
+  deleteAUser: async (_, { id: userId }, context) => {
     const validatedInput = await deleteUserInputSchema.validate(userId);
 
     try {
       const response = await deleteUser(validatedInput);
+
+      notificationsPubSub.publish(
+        getNotificationObject({
+          message: `User with ID: ${userId} has been deleted by ${context.user.name} (${context.user.role})`,
+          data: response,
+          service: SERVICES.UMS,
+          timeStamp: Date.now(),
+          user: context.user,
+        })
+      );
+
       return response;
     } catch (error) {
+      logger.user.error("Error while deleting a user.", {
+        error,
+        payload: { userId },
+      });
       throw new GraphQLError(
         error instanceof Error ? error.message : String(error)
       );
@@ -146,6 +179,7 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
         message: responseMessages.USER.CREATION_SUCCESS,
       };
     } catch (error) {
+      logger.user.error("User Sign Up Error.", { error, payload });
       throw new GraphQLError(
         error instanceof Error ? error.message : String(error)
       );

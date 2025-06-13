@@ -1,5 +1,6 @@
 import { createHmac, randomBytes } from "node:crypto";
-import { HmacHashObject } from "./interfaces.ts";
+import { HmacHashObject, SERVICES } from "./interfaces.ts";
+import { NotificationResponse } from "../generated/graphql.ts";
 
 /**
  * Takes in a string, generates a random salt & then decodes the string using that salt.
@@ -19,3 +20,12 @@ export const generateHmacHash = (
     hash,
   };
 };
+
+export const getNotificationObject = (
+  payload: Partial<NotificationResponse>
+): NotificationResponse => ({
+  ...payload,
+  timeStamp: Date.now(),
+  message: payload.message ?? "New Notification",
+  service: payload.service ?? SERVICES.COMMON,
+});

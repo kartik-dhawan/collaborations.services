@@ -2,11 +2,18 @@ import winston from "winston";
 import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
+import { SERVICES } from "./src/graphql/utils/index.ts";
 
-const logFormat = winston.format.printf(
-  (info) =>
-    `${info.timestamp} ${info.level} [${info.service}] [${info.label}] - ${info.message} `
-); // define a log format, the `info` parameter contains all the keys we pass in `fillExcept` of winston.format.metadata
+const logFormat = winston.format.printf((info) => {
+  const errorMessage = JSON.stringify((info?.metadata as any)?.error);
+  const payloadMessage = JSON.stringify((info?.metadata as any)?.payload);
+
+  return `${info.timestamp} ${info.level} [${info.service}] [${info.label}] - ${
+    info.message
+  } ${errorMessage ? "\nError Details: " + errorMessage + "\n" : ""}${
+    payloadMessage ? "Payload Details: " + payloadMessage : ""
+  } `;
+}); // define a log format, the `info` parameter contains all the keys we pass in `fillExcept` of winston.format.metadata
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -47,9 +54,9 @@ const baseLogger = winston.createLogger({
  */
 
 const logger = {
-  common: baseLogger.child({ service: "common-services" }),
-  user: baseLogger.child({ service: "user-management-service" }),
-  collab: baseLogger.child({ service: "collaborations" }),
+  common: baseLogger.child({ service: SERVICES.COMMON }),
+  user: baseLogger.child({ service: SERVICES.UMS }),
+  collab: baseLogger.child({ service: SERVICES.COLLABORATIONS }),
 };
 
 export default logger;

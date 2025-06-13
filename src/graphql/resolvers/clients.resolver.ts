@@ -1,7 +1,9 @@
 import { GraphQLError } from "graphql";
 import { createNewClient, fetchAllClients } from "../actions/clients.ts";
 import { Resolvers } from "../generated/graphql.ts";
-import { GraphqlCustomContextType } from "../utils/interfaces.ts";
+import { GraphqlCustomContextType, SERVICES } from "../utils/interfaces.ts";
+import { notificationsPubSub } from "../pubsub.ts";
+import { getNotificationObject } from "../utils/index.ts";
 
 export const clientQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
   csGetClients: async (_, __, context) => {
@@ -26,6 +28,16 @@ export const clientMutations: Resolvers<GraphqlCustomContextType>["Mutation"] =
 
       try {
         const createdClient = await createNewClient(payload, userContext);
+
+        notificationsPubSub.publish(
+          getNotificationObject({
+            message: `A new client has been created by ${context.user.name}`,
+            data: createdClient,
+            service: SERVICES.COLLABORATIONS,
+            user: context.user,
+          })
+        );
+
         return createdClient;
       } catch (error) {
         throw new GraphQLError(

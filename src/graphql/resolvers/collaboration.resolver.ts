@@ -5,7 +5,12 @@ import {
   fetchAllCollaborations,
   updateCollaborationByID,
 } from "../actions/index.ts";
-import { GraphqlCustomContextType } from "../utils/index.ts";
+import {
+  getNotificationObject,
+  GraphqlCustomContextType,
+  SERVICES,
+} from "../utils/index.ts";
+import { notificationsPubSub } from "../pubsub.ts";
 
 /** QUERIES */
 export const collabQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
@@ -35,6 +40,16 @@ export const collabMutations: Resolvers<GraphqlCustomContextType>["Mutation"] =
           payload,
           userContext
         );
+
+        notificationsPubSub.publish(
+          getNotificationObject({
+            message: `A new user has been created by ${context.user.name}`,
+            data: createdCollaboration,
+            service: SERVICES.COLLABORATIONS,
+            user: context.user,
+          })
+        );
+
         return createdCollaboration;
       } catch (error) {
         throw new GraphQLError(
