@@ -166,11 +166,13 @@ export const updateUserDetails = async (
     data: {
       ...(payload.email && { email: payload?.email }),
       ...(payload.name && { name: payload?.name }),
-      roleData: {
-        connect: {
-          roleEnum: payload?.role ?? UserRole.User,
+      ...(payload?.role && {
+        roleData: {
+          connect: {
+            roleEnum: payload?.role,
+          },
         },
-      },
+      }),
     },
     include: {
       roleData: {
