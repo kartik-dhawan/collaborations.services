@@ -97,7 +97,7 @@ const userDefs = gql`
 
   input AssignPermissionsPayload {
     permissions: [PermissionValue!]!
-    role: UserRole
+    role: UserRole!
   }
 `;
 

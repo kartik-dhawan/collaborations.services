@@ -18,11 +18,14 @@ import {
   SERVICES,
 } from "../utils/index.ts";
 import {
+  assignPermissionsInputSchema,
   createUserInputSchema,
   deleteUserInputSchema,
+  updateUserInputSchema,
 } from "../utils/validation/inputSchema.ts";
 import { notificationsPubSub } from "../pubsub.ts";
 import logger from "../../../winston.config.ts";
+import schemaValidateOrThrow from "../utils/validation/index.ts";
 
 /** QUERIES */
 export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
@@ -74,8 +77,13 @@ export const userQueries: Resolvers<GraphqlCustomContextType>["Query"] = {
 /** MUTATIONS */
 export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   updateUser: async (_, { payload }, context) => {
+    const validatedPayload = await schemaValidateOrThrow(
+      updateUserInputSchema,
+      payload
+    );
+
     try {
-      const updatedUser = await updateUserDetails(payload);
+      const updatedUser = await updateUserDetails(validatedPayload);
 
       notificationsPubSub.publish(
         getNotificationObject({
@@ -95,13 +103,13 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   },
 
   createUser: async (_, { payload }, context) => {
-    try {
-      // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
-      const validatedPayload = await createUserInputSchema.validate(payload, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+    // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
+    const validatedPayload = await schemaValidateOrThrow(
+      createUserInputSchema,
+      payload
+    );
 
+    try {
       // use the validated input to create user
       const createdUser = await createNewUser(validatedPayload);
 
@@ -127,7 +135,11 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   },
 
   deleteAUser: async (_, { id: userId }, context) => {
-    const validatedInput = await deleteUserInputSchema.validate(userId);
+    // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
+    const validatedInput = await schemaValidateOrThrow(
+      deleteUserInputSchema,
+      userId
+    );
 
     try {
       const response = await deleteUser(validatedInput);
@@ -155,9 +167,15 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   },
 
   umsSignUp: async (_, { payload }) => {
+    // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
+    const validatedPayload = await createUserInputSchema.validate(payload, {
+      abortEarly: false,
+      stripUnknown: true,
+    });
+
     try {
       // create a user
-      const createdUser = await createNewUser(payload);
+      const createdUser = await createNewUser(validatedPayload);
 
       // if a user is not created throw error
       if (!createdUser) {
@@ -187,8 +205,17 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   },
 
   umsAssignPermissionsToRole: async (_, { payload }) => {
+    // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
+    const validatedPayload = await schemaValidateOrThrow(
+      assignPermissionsInputSchema,
+      payload
+    );
+
     try {
-      const userWithUpdatedPerms = await updateRolePermissions(payload);
+      const userWithUpdatedPerms = await updateRolePermissions(
+        validatedPayload
+      );
+
       return userWithUpdatedPerms;
     } catch (error) {
       throw new GraphQLError(

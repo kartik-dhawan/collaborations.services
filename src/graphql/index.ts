@@ -64,11 +64,7 @@ const startServer = async () => {
   const server = new ApolloServer({
     schema: protectedSchema,
     formatError: (err) => {
-      return {
-        message: err.message,
-        path: err.path,
-        completeError: err,
-      };
+      return err;
     },
     // plugins - An array of lifecycle hooks that let you run code at key moments (startup, shutdown, errors, etc.).
     plugins: [

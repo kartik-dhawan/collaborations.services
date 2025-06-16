@@ -19,7 +19,7 @@ export type Scalars = {
 
 export type AssignPermissionsPayload = {
   permissions: Array<PermissionValue>;
-  role?: InputMaybe<UserRole>;
+  role: UserRole;
 };
 
 export type Collaboration = {
