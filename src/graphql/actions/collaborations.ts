@@ -1,3 +1,5 @@
+import { GraphQLError } from "graphql";
+import { PrismaClientKnownRequestError } from "../../prisma/generated/runtime/library.js";
 import prisma from "../../prisma/index.ts";
 import {
   Collaboration,
@@ -149,47 +151,59 @@ export const createNewCollaboration = async (
 export const updateCollaborationByID = async (
   payload: UpdateCollaborationPayload
 ) => {
-  const updatedUser = await prisma.collaborations.update({
-    where: {
-      id: payload.id,
-    },
-    data: {
-      collabStatus: payload.collabStatus!,
-      type: payload.type!,
-      name: payload.name,
-      collabNotes: payload.collabNotes,
-      dealDate: payload.dealDate ? new Date(payload.dealDate) : undefined,
-      deliverables: payload.deliverables!,
-      deliverableStatus: payload.deliverableStatus!,
-      deliverableDate: payload?.deliverableDate
-        ? new Date(payload?.deliverableDate)
-        : undefined,
-      deliverableLink: payload.deliverableLink,
-      paymentAmount: payload.paymentAmount,
-      paymentDate: payload.paymentDate
-        ? new Date(payload.paymentDate)
-        : undefined,
-      paymentStatus: payload.paymentStatus!,
-      deliverableNotes: payload.deliverableNotes,
-      client: {
-        update: {
-          clientNotes: payload.clientPayload?.clientNotes,
-          instagram: payload.clientPayload?.instagram,
-          name: payload.clientPayload?.name,
+  try {
+    const updatedUser = await prisma.collaborations.update({
+      where: {
+        id: payload.id,
+      },
+      data: {
+        collabStatus: payload.collabStatus!,
+        type: payload.type!,
+        name: payload.name,
+        collabNotes: payload.collabNotes,
+        dealDate: payload.dealDate ? new Date(payload.dealDate) : undefined,
+        deliverables: payload.deliverables!,
+        deliverableStatus: payload.deliverableStatus!,
+        deliverableDate: payload?.deliverableDate
+          ? new Date(payload?.deliverableDate)
+          : undefined,
+        deliverableLink: payload.deliverableLink,
+        paymentAmount: payload.paymentAmount,
+        paymentDate: payload.paymentDate
+          ? new Date(payload.paymentDate)
+          : undefined,
+        paymentStatus: payload.paymentStatus!,
+        deliverableNotes: payload.deliverableNotes,
+        client: {
+          update: {
+            clientNotes: payload.clientPayload?.clientNotes,
+            instagram: payload.clientPayload?.instagram,
+            name: payload.clientPayload?.name,
+          },
         },
       },
-    },
-    include: {
-      client: {
-        include: {
-          contactPeople: true,
+      include: {
+        client: {
+          include: {
+            contactPeople: true,
+          },
         },
+        user: true,
       },
-      user: true,
-    },
-  });
+    });
 
-  const finalRes: Collaboration = collborationDataMapper(updatedUser);
+    const finalRes: Collaboration = collborationDataMapper(updatedUser);
 
-  return finalRes;
+    return finalRes;
+  } catch (error) {
+    // Prisma “not found” error when update hits zero records
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new GraphQLError(`No user found with ID '${payload.id}'`);
+    }
+
+    throw error;
+  }
 };

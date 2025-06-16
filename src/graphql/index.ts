@@ -15,6 +15,7 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerErrorCode } from "@apollo/server/errors";
 
 dotenv.config();
 
@@ -64,6 +65,14 @@ const startServer = async () => {
   const server = new ApolloServer({
     schema: protectedSchema,
     formatError: (err) => {
+      if (err?.extensions?.code === ApolloServerErrorCode.BAD_USER_INPUT) {
+        return {
+          message: "Input validation failed.",
+          code: ApolloServerErrorCode.BAD_USER_INPUT,
+          validationErrors: err.extensions.validationErrors ?? [],
+        };
+      }
+
       return err;
     },
     // plugins - An array of lifecycle hooks that let you run code at key moments (startup, shutdown, errors, etc.).

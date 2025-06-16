@@ -25,6 +25,7 @@ import {
   UserPrismaToGQL,
 } from "../utils/interfaces.ts";
 import jwt from "jsonwebtoken";
+import { PrismaClientKnownRequestError } from "../../prisma/generated/runtime/library.js";
 
 // This is a mapper function to convert the Prisma data structure to the GraphQL data structure
 export const userDataMapperToGQL = (data: UserPrismaToGQL): User => {
@@ -156,37 +157,51 @@ export const fetchUserByEmail = async (
 export const updateUserDetails = async (
   payload: MutationUpdateUserArgs["payload"]
 ) => {
-  // update the user in DB
-  const updatedUser = await prisma.user.update({
-    // match the user by ID
-    where: {
-      id: payload.id,
-    },
-    // then update the data
-    data: {
-      ...(payload.email && { email: payload?.email }),
-      ...(payload.name && { name: payload?.name }),
-      ...(payload?.role && {
+  try {
+    // update the user in DB
+    const updatedUser = await prisma.user.update({
+      // match the user by ID
+      where: {
+        id: payload.id,
+      },
+      // then update the data
+      data: {
+        ...(payload.email && { email: payload?.email }),
+        ...(payload.name && { name: payload?.name }),
+        ...(payload?.role && {
+          roleData: {
+            connect: {
+              roleEnum: payload?.role,
+            },
+          },
+        }),
+      },
+      include: {
         roleData: {
-          connect: {
-            roleEnum: payload?.role,
+          include: {
+            permissions: true,
           },
         },
-      }),
-    },
-    include: {
-      roleData: {
-        include: {
-          permissions: true,
-        },
       },
-    },
-  });
+    });
 
-  // map data from Prisma schema to graphql Schema
-  const finalRes: User = userDataMapperToGQL(updatedUser);
+    // map data from Prisma schema to graphql Schema
+    const finalRes: User = userDataMapperToGQL(updatedUser);
 
-  return finalRes;
+    return finalRes;
+  } catch (error) {
+    // Prisma “not found” error when update hits zero records
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new GraphQLError(
+        `Could not delete User. No user found with ID '${payload.id}'`
+      );
+    }
+
+    throw error;
+  }
 };
 
 export const createNewUser = async (payload: CreateUserPayload) => {
@@ -224,22 +239,36 @@ export const deleteUser = async (
   userId: number
 ): Promise<DeleteUserResponse> => {
   // delete user from DB
-  const deletedUser = await prisma.user.delete({
-    where: {
-      id: userId,
-    },
-  });
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
 
-  if (deletedUser) {
-    return {
-      message: responseMessages.USER.DELETION_SUCCESS,
-      status: DeleteStatus.Success,
-    };
-  } else {
-    return {
-      message: responseMessages.USER.NOT_FOUND,
-      status: DeleteStatus.Failed,
-    };
+    if (deletedUser) {
+      return {
+        message: responseMessages.USER.DELETION_SUCCESS,
+        status: DeleteStatus.Success,
+      };
+    } else {
+      return {
+        message: responseMessages.USER.NOT_FOUND,
+        status: DeleteStatus.Failed,
+      };
+    }
+  } catch (error) {
+    // Prisma “not found” error when update hits zero records
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new GraphQLError(
+        `Could not delete User. No user found with ID '${userId}'`
+      );
+    }
+
+    throw error;
   }
 };
 

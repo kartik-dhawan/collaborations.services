@@ -1,3 +1,4 @@
+import { ApolloServerErrorCode } from "@apollo/server/errors";
 import { GraphQLError } from "graphql";
 import { Schema, ValidationError } from "yup";
 
@@ -16,7 +17,7 @@ const schemaValidateOrThrow = async <T>(
       }));
       throw new GraphQLError("Input validation failed", {
         extensions: {
-          code: "BAD_USER_INPUT",
+          code: ApolloServerErrorCode.BAD_USER_INPUT,
           validationErrors, // your array of { path, message }
         },
       });
