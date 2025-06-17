@@ -167,11 +167,10 @@ export const userMutations: Resolvers<GraphqlCustomContextType>["Mutation"] = {
   },
 
   umsSignUp: async (_, { payload }) => {
-    // validate the `input` entered by the user inthe mutation, if the schema & input dont match, it will throw error
-    const validatedPayload = await createUserInputSchema.validate(payload, {
-      abortEarly: false,
-      stripUnknown: true,
-    });
+    const validatedPayload = await schemaValidateOrThrow(
+      createUserInputSchema,
+      payload
+    );
 
     try {
       // create a user
